@@ -110,7 +110,7 @@ export const translations: Record<Language, Translations> = {
       cycleLabel: "Billing Cycle",
       monthly: "Monthly",
       yearly: "Yearly",
-      submit: "Commit New Subscription",
+      submit: "Add Subscription",
     },
     history: {
       title: "Ledger",
@@ -169,7 +169,7 @@ export const translations: Record<Language, Translations> = {
       cycleLabel: "결제 주기",
       monthly: "월간",
       yearly: "연간",
-      submit: "구독 추가 커밋하기",
+      submit: "구독 추가",
     },
     history: {
       title: "장부 (Ledger)",
@@ -229,7 +229,7 @@ export const translations: Record<Language, Translations> = {
       cycleLabel: "請求サイクル",
       monthly: "月次",
       yearly: "年次",
-      submit: "新規追加をコミット",
+      submit: "追加する",
     },
     history: {
       title: "台帳 (Ledger)",
@@ -287,7 +287,7 @@ export const translations: Record<Language, Translations> = {
       cycleLabel: "计费周期",
       monthly: "按月",
       yearly: "按年",
-      submit: "提交新订阅",
+      submit: "添加订阅",
     },
     history: {
       title: "账本 (Ledger)",

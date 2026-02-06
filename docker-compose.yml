@@ -1,0 +1,19 @@
+services:
+  sublog:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    # env_file은 컨테이너 "생성" 시에만 읽힙니다.
+    # restart: always로 재시작하면 이미 생성된 컨테이너의 env가 유지됩니다.
+    # 문제가 되는 건 docker compose up으로 "재생성"할 때 .env.local 경로를 못 찾는 경우.
+    # 그래서 env_file + environment 둘 다 씁니다 (environment가 우선).
+    env_file:
+      - path: .env.local
+        required: false
+    environment:
+      - AUTH_TRUST_HOST=true
+      # 아래 값들은 .env.local에서 읽히거나, 직접 여기에 하드코딩 가능:
+      # - AUTH_GITHUB_ID=your_id
+      # - AUTH_GITHUB_SECRET=your_secret
+      # - AUTH_SECRET=your_secret
