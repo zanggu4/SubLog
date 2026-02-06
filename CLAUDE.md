@@ -81,3 +81,4 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 - Dockerfile 빌드 시 더미 env 사용 (build-placeholder), 런타임에 실제 값 주입
 - 정적 페이지에서 process.env 참조 시 빌드 타임에 인라인됨 → dynamic 페이지는 `force-dynamic` 필요
 - 유저 응대는 한국어로
+- **작업 완료 후 반드시 이 CLAUDE.md를 최신 상태로 업데이트할 것** (파일/구조 변경, 새 패턴, 환경변수 추가 등)
