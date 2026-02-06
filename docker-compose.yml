@@ -9,7 +9,7 @@ services:
     # 문제가 되는 건 docker compose up으로 "재생성"할 때 .env.local 경로를 못 찾는 경우.
     # 그래서 env_file + environment 둘 다 씁니다 (environment가 우선).
     env_file:
-      - path: .env.local
+      - path: .env
         required: false
     environment:
       - AUTH_TRUST_HOST=true
