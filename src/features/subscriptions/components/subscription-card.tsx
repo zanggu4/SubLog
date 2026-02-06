@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, Trash2, CheckCircle2, XCircle } from "lucide-react";
+import { Calendar, Trash2, CheckCircle2, XCircle, Pencil } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
 import { Dialog } from "@/components/ui/dialog";
+import { EditSubscriptionDialog } from "./edit-subscription-dialog";
 import type { Subscription } from "@/features/subscriptions/types";
 
 interface SubscriptionCardProps {
@@ -15,6 +16,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   const router = useRouter();
   const { t, displayCurrency, formatOriginal, convertToDisplay } = useSettings();
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -98,20 +100,35 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         </div>
 
         {!isCancelled && (
-          <button
-            onClick={() => setCancelOpen(true)}
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors border border-border text-muted hover:bg-danger/5 hover:text-danger hover:border-danger/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-          >
-            {loading ? (
-              <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <Trash2 size={16} />
-            )}
-            {loading ? t.subs.committing : t.subs.cancelBtn}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setEditOpen(true)}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors border border-border text-muted hover:bg-primary/5 hover:text-primary hover:border-primary/30 cursor-pointer"
+            >
+              <Pencil size={16} />
+              {t.subs.editBtn}
+            </button>
+            <button
+              onClick={() => setCancelOpen(true)}
+              disabled={loading}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors border border-border text-muted hover:bg-danger/5 hover:text-danger hover:border-danger/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {loading ? (
+                <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Trash2 size={16} />
+              )}
+              {loading ? t.subs.committing : t.subs.cancelBtn}
+            </button>
+          </div>
         )}
       </div>
+
+      <EditSubscriptionDialog
+        subscription={subscription}
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+      />
 
       <Dialog
         open={cancelOpen}

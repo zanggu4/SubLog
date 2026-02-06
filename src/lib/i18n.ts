@@ -32,6 +32,9 @@ export interface Translations {
     cancelConfirm: string;
     cancelDialogTitle: string;
     cancelDialogCommitNote: string;
+    editBtn: string;
+    editDialogTitle: string;
+    editSuccess: string;
   };
   form: {
     title: string;
@@ -45,6 +48,7 @@ export interface Translations {
     monthly: string;
     yearly: string;
     submit: string;
+    saveBtn: string;
   };
   history: {
     title: string;
@@ -98,6 +102,9 @@ export const translations: Record<Language, Translations> = {
       cancelDialogTitle: "Cancel Subscription",
       cancelDialogCommitNote:
         "This will create a 'chore: cancel' commit on GitHub.",
+      editBtn: "Edit",
+      editDialogTitle: "Edit Subscription",
+      editSuccess: "Updated successfully",
     },
     form: {
       title: "New Subscription",
@@ -111,6 +118,7 @@ export const translations: Record<Language, Translations> = {
       monthly: "Monthly",
       yearly: "Yearly",
       submit: "Add Subscription",
+      saveBtn: "Save Changes",
     },
     history: {
       title: "Ledger",
@@ -157,6 +165,9 @@ export const translations: Record<Language, Translations> = {
       cancelConfirm: "{name} 구독을 해지하시겠습니까?",
       cancelDialogTitle: "구독 해지",
       cancelDialogCommitNote: "GitHub에 해지 커밋이 생성됩니다.",
+      editBtn: "수정",
+      editDialogTitle: "구독 수정",
+      editSuccess: "수정 완료",
     },
     form: {
       title: "새 구독 추가",
@@ -170,6 +181,7 @@ export const translations: Record<Language, Translations> = {
       monthly: "월간",
       yearly: "연간",
       submit: "구독 추가",
+      saveBtn: "변경 사항 저장",
     },
     history: {
       title: "장부 (Ledger)",
@@ -217,6 +229,9 @@ export const translations: Record<Language, Translations> = {
       cancelConfirm: "{name} を解約してもよろしいですか？",
       cancelDialogTitle: "サブスクリプション解約",
       cancelDialogCommitNote: "'chore: cancel' コミットが作成されます。",
+      editBtn: "編集",
+      editDialogTitle: "サブスクリプション編集",
+      editSuccess: "更新完了",
     },
     form: {
       title: "新規サブスクリプション",
@@ -230,6 +245,7 @@ export const translations: Record<Language, Translations> = {
       monthly: "月次",
       yearly: "年次",
       submit: "追加する",
+      saveBtn: "変更を保存",
     },
     history: {
       title: "台帳 (Ledger)",
@@ -275,6 +291,9 @@ export const translations: Record<Language, Translations> = {
       cancelConfirm: "您确定要取消 {name} 吗？",
       cancelDialogTitle: "取消订阅",
       cancelDialogCommitNote: "这将创建一个 'chore: cancel' 提交。",
+      editBtn: "编辑",
+      editDialogTitle: "编辑订阅",
+      editSuccess: "更新成功",
     },
     form: {
       title: "新订阅",
@@ -288,6 +307,7 @@ export const translations: Record<Language, Translations> = {
       monthly: "按月",
       yearly: "按年",
       submit: "添加订阅",
+      saveBtn: "保存更改",
     },
     history: {
       title: "账本 (Ledger)",
