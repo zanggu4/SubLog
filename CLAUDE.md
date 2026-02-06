@@ -11,6 +11,7 @@ GitHub 커밋 기반 구독 가계부 웹앱. DB 없이 GitHub 레포가 저장�
 - Zod (유효성 검사)
 - pnpm (패키지 매니저)
 - Docker (멀티스테이지 빌드)
+- Google AdSense (ca-pub-3548718549123736)
 - 폰트: SUIT Variable (한국어/영어) + Noto Sans JP (일본어) + Noto Sans SC (중국어) + Geist Mono (코드 요소만)
 
 ## 핵심 구조
@@ -24,7 +25,7 @@ src/
 │   │   └── (auth)/login/
 │   │       └── page.tsx    # 로그인 (Server Component, 로컬라이즈)
 │   ├── page.tsx            # / → /ko 리다이렉트 (fallback)
-│   ├── layout.tsx          # 루트 레이아웃 (폰트, providers, base metadata)
+│   ├── layout.tsx          # 루트 레이아웃 (폰트, providers, base metadata, AdSense)
 │   ├── icon.svg            # SubLog 파비콘 (터미널 프롬프트 아이콘)
 │   ├── sitemap.ts          # 사이트맵 (4언어 × 2페이지 = 8 URL + alternates)
 │   ├── robots.ts           # robots.txt (/dashboard, /api/ 차단)
@@ -40,13 +41,13 @@ src/
 │       └── exchange-rates/route.ts     # 환율 API
 ├── middleware.ts            # 언어 감지 + 리다이렉트 + 인증 보호 (통합)
 ├── lib/
-│   ├── auth.ts             # Auth.js 설정 (scope: repo read:user user:email)
+│   ├── auth.ts             # Auth.js 설정 (scope: repo read:user user:email, AUTH_SECRET 런타임 검증)
 │   ├── octokit.ts          # Octokit 팩토리
-│   ├── i18n.ts             # 다국어 (en, ko, ja, zh) - seo, calendar, categories 포함
+│   ├── i18n.ts             # 다국어 (en, ko, ja, zh) - SUPPORTED_LANGS, isLanguage(), seo, calendar, categories
 │   ├── currency.ts         # 통화 설정 (KRW, USD, JPY, EUR, CNY)
 │   └── settings-context.tsx # 테마, 언어, 통화 Context + 쿠키/html lang 동기화
 ├── features/
-│   ├── github/services/    # repo.ts, content.ts, commits.ts
+│   ├── github/services/    # repo.ts, content.ts (Zod safeParse 검증), commits.ts
 │   ├── subscriptions/
 │   │   ├── types/          # Zod 스키마 (CATEGORIES, CATEGORY_CONFIG 포함)
 │   │   ├── data/           # known-services.ts (서비스 자동완성 데이터)
@@ -56,7 +57,7 @@ src/
 │   │                       # payment-calendar, dashboard-content
 │   └── auth/components/    # header.tsx, footer.tsx
 └── components/
-    ├── ui/                 # button, card, dialog (hideFooter 옵션)
+    ├── ui/                 # button, card, dialog (hideFooter, cancelLabel 옵션)
     └── lang-sync.tsx       # URL 언어를 SettingsProvider에 동기화
 ```
 
@@ -71,8 +72,9 @@ src/
 - 카테고리: 8종 (entertainment, development, cloud, productivity, music, shopping, news, other)
 - 결제 캘린더: monthly는 매월 billing_day, yearly는 billing_month의 billing_day에만 표시
 - `subscriptions-updated` 커스텀 DOM 이벤트로 컴포넌트 간 갱신 (커밋 히스토리 등)
-- 커밋 히스토리: 접기/펼치기 토글 (기본 닫힘, lazy fetch)
+- 커밋 히스토리: 접기/펼치기 토글 (기본 닫힘, lazy fetch), AbortController로 중복 요청 취소
 - 통화 금액 표시: `tabular-nums` 사용 (`font-mono` 대신)
+- toast 패턴: `useRef` 타이머 + `useEffect` cleanup으로 메모리 누수 방지
 
 ## 다국어 SEO
 
@@ -135,4 +137,9 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 - Tailwind v4에서 `@import url()` 사용 금지 → 외부 폰트는 `layout.tsx`의 `<link>` 태그로 로드
 - `middleware.ts`는 인증 보호 + 다국어 라우팅을 통합 처리 (`auth()` 래퍼 사용)
 - `[lang]` 라우트와 `/dashboard`, `/api` 는 Next.js 정적 라우트 우선 규칙으로 충돌 없음
+- `SUPPORTED_LANGS`는 `i18n.ts`에서 `as const`로 단일 정의, 언어 검증은 `isLanguage()` 타입 가드 사용
+- `AUTH_SECRET` 검증: 프로덕션 런타임에서만 실행 (Docker 빌드 시 `build-placeholder`는 스킵)
+- JSON-LD의 `dangerouslySetInnerHTML`에는 `replace(/</g, "\\u003c")` XSS 방지 필수
+- error boundary에서 `error.message` 직접 노출 금지 (내부 정보 유출 방지)
+- `readSubscriptions`는 Zod `safeParse`로 외부 데이터 검증 후 사용
 - **작업 완료 후 반드시 이 CLAUDE.md를 최신 상태로 업데이트할 것** (파일/구조 변경, 새 패턴, 환경변수 추가 등)
