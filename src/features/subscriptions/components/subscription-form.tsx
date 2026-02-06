@@ -4,6 +4,13 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Loader2 } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
+import { AutocompleteInput } from "./autocomplete-input";
+import { knownServices } from "../data/known-services";
+
+const serviceOptions = knownServices.map((s) => ({
+  label: s.name,
+  searchTerms: [s.name.toLowerCase(), ...(s.aliases ?? []).map((a) => a.toLowerCase())],
+}));
 
 export function SubscriptionForm() {
   const router = useRouter();
@@ -80,11 +87,12 @@ export function SubscriptionForm() {
             <label className="block text-sm font-medium text-muted mb-1.5">
               {t.form.nameLabel}
             </label>
-            <input
+            <AutocompleteInput
               name="name"
               required
               autoFocus
               placeholder={t.form.namePlaceholder}
+              options={serviceOptions}
               className="w-full bg-background border border-border rounded-lg px-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
             />
           </div>

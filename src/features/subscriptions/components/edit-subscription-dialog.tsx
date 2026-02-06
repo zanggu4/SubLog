@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { Loader2, Save } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
 import { Dialog } from "@/components/ui/dialog";
+import { AutocompleteInput } from "./autocomplete-input";
+import { knownServices } from "../data/known-services";
 import type { Subscription } from "@/features/subscriptions/types";
+
+const serviceOptions = knownServices.map((s) => ({
+  label: s.name,
+  searchTerms: [s.name.toLowerCase(), ...(s.aliases ?? []).map((a) => a.toLowerCase())],
+}));
 
 interface EditSubscriptionDialogProps {
   subscription: Subscription;
@@ -72,10 +79,11 @@ export function EditSubscriptionDialog({
             <label className="block text-sm font-medium text-muted mb-1.5">
               {t.form.nameLabel}
             </label>
-            <input
+            <AutocompleteInput
               name="name"
               required
               defaultValue={subscription.name}
+              options={serviceOptions}
               className="w-full bg-background border border-border rounded-lg px-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
             />
           </div>
