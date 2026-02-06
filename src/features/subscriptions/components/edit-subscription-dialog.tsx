@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useRef, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Save } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
@@ -29,7 +29,18 @@ export function EditSubscriptionDialog({
   const { t } = useSettings();
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const [editCycle, setEditCycle] = useState(subscription.cycle);
+
+  useEffect(() => {
+    return () => { if (toastTimer.current) clearTimeout(toastTimer.current); };
+  }, []);
+
+  const showToast = (msg: string) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast(msg);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
+  };
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -61,8 +72,7 @@ export function EditSubscriptionDialog({
         throw new Error(data.error ?? "Failed to update");
       }
 
-      setToast(t.subs.editSuccess);
-      setTimeout(() => setToast(null), 3000);
+      showToast(t.subs.editSuccess);
       onClose();
       router.refresh();
       window.dispatchEvent(new Event("subscriptions-updated"));

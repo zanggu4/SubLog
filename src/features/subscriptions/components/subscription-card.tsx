@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Calendar,
@@ -30,6 +30,17 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
+
+  useEffect(() => {
+    return () => { if (toastTimer.current) clearTimeout(toastTimer.current); };
+  }, []);
+
+  const showToast = (msg: string) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast(msg);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
+  };
 
   const isCancelled = subscription.status === "cancelled";
   const isPaused = subscription.status === "paused";
@@ -46,8 +57,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         const data = text ? JSON.parse(text) : {};
         throw new Error(data.error ?? "Failed to cancel");
       }
-      setToast(`${subscription.name} — ${t.subs.statusCancelled}`);
-      setTimeout(() => setToast(null), 3000);
+      showToast(`${subscription.name} — ${t.subs.statusCancelled}`);
       router.refresh();
       window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
@@ -80,8 +90,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         const data = text ? JSON.parse(text) : {};
         throw new Error(data.error ?? "Failed to pause");
       }
-      setToast(`${subscription.name} — ${t.subs.statusPaused}`);
-      setTimeout(() => setToast(null), 3000);
+      showToast(`${subscription.name} — ${t.subs.statusPaused}`);
       setPauseOpen(false);
       router.refresh();
       window.dispatchEvent(new Event("subscriptions-updated"));
@@ -105,8 +114,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         const data = text ? JSON.parse(text) : {};
         throw new Error(data.error ?? "Failed to resume");
       }
-      setToast(`${subscription.name} — ${t.subs.statusActive}`);
-      setTimeout(() => setToast(null), 3000);
+      showToast(`${subscription.name} — ${t.subs.statusActive}`);
       router.refresh();
       window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
@@ -183,11 +191,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             <span className="text-xs text-muted tabular-nums">
               ({convertToDisplay(
                 subscription.price,
-                (subscription.currency ?? "KRW") as
-                  | "KRW"
-                  | "USD"
-                  | "JPY"
-                  | "EUR"
+                (subscription.currency ?? "KRW") as CurrencyCode
               )})
             </span>
           )}
@@ -238,6 +242,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
               disabled={loading}
               className="py-2 px-2.5 rounded-lg transition-colors border border-border text-muted hover:bg-danger/5 hover:text-danger hover:border-danger/30 disabled:opacity-50 cursor-pointer"
               title={t.subs.cancelBtn}
+              aria-label={t.subs.cancelBtn}
             >
               <Trash2 size={16} />
             </button>
@@ -319,6 +324,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         title={t.subs.cancelDialogTitle}
         onConfirm={handleCancel}
         confirmLabel={t.subs.cancelBtn}
+        cancelLabel={t.form.cancel}
         confirmVariant="danger"
       >
         <p>

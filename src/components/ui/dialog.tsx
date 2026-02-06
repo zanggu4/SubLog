@@ -11,6 +11,7 @@ interface DialogProps {
   onConfirm?: () => void;
   confirmLabel?: string;
   confirmVariant?: "primary" | "danger";
+  cancelLabel?: string;
   hideFooter?: boolean;
 }
 
@@ -22,6 +23,7 @@ export function Dialog({
   onConfirm,
   confirmLabel = "Confirm",
   confirmVariant = "primary",
+  cancelLabel = "Cancel",
   hideFooter = false,
 }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -48,7 +50,7 @@ export function Dialog({
         {!hideFooter && (
           <div className="flex justify-end gap-3">
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {cancelLabel}
             </Button>
             {onConfirm && (
               <Button variant={confirmVariant} onClick={onConfirm}>

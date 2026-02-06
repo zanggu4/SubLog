@@ -1,4 +1,9 @@
-export type Language = "en" | "ko" | "ja" | "zh";
+export const SUPPORTED_LANGS = ["en", "ko", "ja", "zh"] as const;
+export type Language = (typeof SUPPORTED_LANGS)[number];
+
+export function isLanguage(value: string): value is Language {
+  return (SUPPORTED_LANGS as readonly string[]).includes(value);
+}
 
 export interface Translations {
   app: { title: string; subtitle: string };

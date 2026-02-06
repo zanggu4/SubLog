@@ -4,10 +4,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useSettings } from "@/lib/settings-context";
 import { Sun, Moon, Globe } from "lucide-react";
-import type { Language } from "@/lib/i18n";
-import { translations } from "@/lib/i18n";
-
-const SUPPORTED_LANGS = ["en", "ko", "ja", "zh"];
+import { SUPPORTED_LANGS, translations, type Language } from "@/lib/i18n";
 
 export default function Home() {
   const { t, theme, toggleTheme, language, setLanguage } = useSettings();
@@ -117,7 +114,7 @@ export default function Home() {
               price: "0",
               priceCurrency: "USD",
             },
-          }),
+          }).replace(/</g, "\\u003c"),
         }}
       />
     </div>

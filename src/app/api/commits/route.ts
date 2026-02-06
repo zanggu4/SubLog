@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const page = Number(request.nextUrl.searchParams.get("page") ?? "1");
+  const page = Math.max(1, Math.floor(Number(request.nextUrl.searchParams.get("page")) || 1));
   const octokit = createOctokit(session.accessToken);
 
   const commits = await getCommitHistory(

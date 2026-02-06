@@ -6,6 +6,7 @@ const FALLBACK_USD_RATES: Record<string, number> = {
   KRW: 1350,
   JPY: 150,
   EUR: 0.92,
+  CNY: 7.25,
 };
 
 export async function GET() {
@@ -23,6 +24,7 @@ export async function GET() {
       KRW: data.rates.KRW,
       JPY: data.rates.JPY,
       EUR: data.rates.EUR,
+      CNY: data.rates.CNY,
     };
 
     return NextResponse.json({

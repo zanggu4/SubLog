@@ -1,6 +1,12 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 
+if (!process.env.AUTH_SECRET || process.env.AUTH_SECRET.length < 32) {
+  throw new Error(
+    "AUTH_SECRET must be set and at least 32 characters. Run: pnpm dlx auth secret"
+  );
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     GitHub({

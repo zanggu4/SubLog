@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
-import { translations, type Language } from "@/lib/i18n";
+import { SUPPORTED_LANGS, isLanguage, translations } from "@/lib/i18n";
 
-const SUPPORTED_LANGS = ["en", "ko", "ja", "zh"];
 const BASE_URL = "https://sublog.bbiero.dev";
 
 export async function generateStaticParams() {
@@ -16,9 +15,9 @@ export async function generateMetadata({
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  if (!SUPPORTED_LANGS.includes(lang)) return {};
+  if (!isLanguage(lang)) return {};
 
-  const t = translations[lang as Language];
+  const t = translations[lang];
 
   return {
     title: t.seo.loginTitle,
@@ -44,7 +43,7 @@ export default async function LoginPage({
   if (session) redirect("/dashboard");
 
   const { lang } = await params;
-  const validLang = SUPPORTED_LANGS.includes(lang) ? (lang as Language) : "ko";
+  const validLang = isLanguage(lang) ? lang : "ko";
   const t = translations[validLang];
 
   return (

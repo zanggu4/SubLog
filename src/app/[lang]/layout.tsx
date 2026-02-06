@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { translations, type Language } from "@/lib/i18n";
+import { SUPPORTED_LANGS, isLanguage, translations } from "@/lib/i18n";
 import { LangSync } from "@/components/lang-sync";
-
-const SUPPORTED_LANGS = ["en", "ko", "ja", "zh"];
 const BASE_URL = "https://sublog.bbiero.dev";
 
 const LOCALE_MAP: Record<string, string> = {
@@ -23,9 +21,9 @@ export async function generateMetadata({
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  if (!SUPPORTED_LANGS.includes(lang)) return {};
+  if (!isLanguage(lang)) return {};
 
-  const t = translations[lang as Language];
+  const t = translations[lang];
 
   return {
     title: {
@@ -69,11 +67,11 @@ export default async function LangLayout({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  if (!SUPPORTED_LANGS.includes(lang)) notFound();
+  if (!isLanguage(lang)) notFound();
 
   return (
     <>
-      <LangSync lang={lang as Language} />
+      <LangSync lang={lang} />
       {children}
     </>
   );

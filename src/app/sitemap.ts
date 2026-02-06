@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SUPPORTED_LANGS } from "@/lib/i18n";
 
 const BASE_URL = "https://sublog.bbiero.dev";
-const SUPPORTED_LANGS = ["en", "ko", "ja", "zh"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [

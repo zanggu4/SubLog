@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useRef, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Loader2 } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
@@ -19,7 +19,18 @@ export function SubscriptionForm() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
+
+  useEffect(() => {
+    return () => { if (toastTimer.current) clearTimeout(toastTimer.current); };
+  }, []);
+
+  const showToast = (msg: string) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast(msg);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
+  };
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -50,8 +61,7 @@ export function SubscriptionForm() {
         throw new Error(data.error ?? "Failed to create");
       }
 
-      setToast(`${body.name} — committed`);
-      setTimeout(() => setToast(null), 3000);
+      showToast(`${body.name} — committed`);
       setOpen(false);
       router.refresh();
       window.dispatchEvent(new Event("subscriptions-updated"));

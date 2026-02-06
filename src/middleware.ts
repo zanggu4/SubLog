@@ -1,19 +1,18 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
-
-const SUPPORTED_LANGS = ["en", "ko", "ja", "zh"];
+import { SUPPORTED_LANGS, isLanguage } from "@/lib/i18n";
 const DEFAULT_LANG = "ko";
 
 function detectLanguage(request: Request & { cookies: { get: (name: string) => { value: string } | undefined } }): string {
   const cookieLang = request.cookies.get("sublog-lang")?.value;
-  if (cookieLang && SUPPORTED_LANGS.includes(cookieLang)) return cookieLang;
+  if (cookieLang && isLanguage(cookieLang)) return cookieLang;
 
   const acceptLang = request.headers.get("Accept-Language");
   if (acceptLang) {
     const preferred = acceptLang
       .split(",")
       .map((l) => l.split(";")[0].trim().slice(0, 2));
-    const matched = preferred.find((l) => SUPPORTED_LANGS.includes(l));
+    const matched = preferred.find((l) => isLanguage(l));
     if (matched) return matched;
   }
 
@@ -43,7 +42,7 @@ export default auth((req) => {
 
   // Already has valid language prefix
   const firstSegment = pathname.split("/")[1];
-  if (SUPPORTED_LANGS.includes(firstSegment)) {
+  if (isLanguage(firstSegment)) {
     return;
   }
 

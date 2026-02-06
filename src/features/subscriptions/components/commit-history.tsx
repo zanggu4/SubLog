@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GitCommit, ExternalLink, Clock, ChevronDown } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
 
@@ -20,23 +20,42 @@ export function CommitHistory() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [hasFetched, setHasFetched] = useState(false);
 
+  const abortRef = useRef<AbortController | null>(null);
+
   useEffect(() => {
-    const handler = () => setRefreshKey((k) => k + 1);
+    const handler = () => {
+      // Delay re-fetch to allow GitHub API eventual consistency
+      setTimeout(() => setRefreshKey((k) => k + 1), 1500);
+    };
     window.addEventListener("subscriptions-updated", handler);
     return () => window.removeEventListener("subscriptions-updated", handler);
   }, []);
 
   useEffect(() => {
     if (!open && !hasFetched) return;
+
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setLoading(true);
-    fetch(`/api/commits?page=${page}`)
+    fetch(`/api/commits?page=${page}`, { signal: controller.signal })
       .then((res) => res.json())
-      .then((data) => setCommits(data))
-      .catch(() => setCommits([]))
+      .then((data) => {
+        if (!controller.signal.aborted) setCommits(data);
+      })
+      .catch((err) => {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        if (!controller.signal.aborted) setCommits([]);
+      })
       .finally(() => {
-        setLoading(false);
-        setHasFetched(true);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+          setHasFetched(true);
+        }
       });
+
+    return () => controller.abort();
   }, [page, refreshKey, open, hasFetched]);
 
   return (

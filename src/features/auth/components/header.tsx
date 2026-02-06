@@ -73,6 +73,7 @@ export function Header() {
           <button
             onClick={toggleTheme}
             className="p-2 rounded-md text-muted hover:text-foreground hover:bg-background border border-border transition-colors cursor-pointer"
+            aria-label={theme === "dark" ? "Light mode" : "Dark mode"}
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
@@ -88,6 +89,7 @@ export function Header() {
                 onClick={() => signOut({ callbackUrl: `/${language}` })}
                 className="p-2 hover:bg-background rounded-md text-muted hover:text-foreground transition-colors cursor-pointer"
                 title="Logout"
+                aria-label="Logout"
               >
                 <LogOut size={18} />
               </button>
