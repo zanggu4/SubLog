@@ -54,6 +54,7 @@ export function SubscriptionForm() {
       setTimeout(() => setToast(null), 3000);
       setOpen(false);
       router.refresh();
+      window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error");
     } finally {

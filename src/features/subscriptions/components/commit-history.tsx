@@ -16,6 +16,13 @@ export function CommitHistory() {
   const [commits, setCommits] = useState<CommitEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const handler = () => setRefreshKey((k) => k + 1);
+    window.addEventListener("subscriptions-updated", handler);
+    return () => window.removeEventListener("subscriptions-updated", handler);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -24,7 +31,7 @@ export function CommitHistory() {
       .then((data) => setCommits(data))
       .catch(() => setCommits([]))
       .finally(() => setLoading(false));
-  }, [page]);
+  }, [page, refreshKey]);
 
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">

@@ -65,6 +65,7 @@ export function EditSubscriptionDialog({
       setTimeout(() => setToast(null), 3000);
       onClose();
       router.refresh();
+      window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error");
     } finally {

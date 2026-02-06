@@ -49,6 +49,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
       setToast(`${subscription.name} — ${t.subs.statusCancelled}`);
       setTimeout(() => setToast(null), 3000);
       router.refresh();
+      window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error");
     } finally {
@@ -83,6 +84,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
       setTimeout(() => setToast(null), 3000);
       setPauseOpen(false);
       router.refresh();
+      window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error");
     } finally {
@@ -106,6 +108,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
       setToast(`${subscription.name} — ${t.subs.statusActive}`);
       setTimeout(() => setToast(null), 3000);
       router.refresh();
+      window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error");
     } finally {
