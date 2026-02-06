@@ -4,6 +4,7 @@ export const SubscriptionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   price: z.number().positive(),
+  currency: z.enum(["KRW", "USD", "JPY", "EUR"]).default("KRW"),
   cycle: z.enum(["monthly", "yearly"]),
   billing_day: z.number().int().min(1).max(31),
   status: z.enum(["active", "cancelled"]),

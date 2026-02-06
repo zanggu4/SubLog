@@ -2,6 +2,7 @@
 
 import { Activity, Wallet, CalendarRange } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
+import { currencies, formatCurrency } from "@/lib/currency";
 import type { Subscription } from "@/features/subscriptions/types";
 
 interface DashboardSummaryProps {
@@ -9,16 +10,23 @@ interface DashboardSummaryProps {
 }
 
 export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
-  const { t, convertAndFormat } = useSettings();
+  const { t, displayCurrency, convertAmount } = useSettings();
   const active = subscriptions.filter((s) => s.status === "active");
+
   const monthlyTotal = active.reduce((sum, s) => {
-    if (s.cycle === "yearly") return sum + Math.round(s.price / 12);
-    return sum + s.price;
+    const cur = (s.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR";
+    const monthly = s.cycle === "yearly" ? s.price / 12 : s.price;
+    return sum + convertAmount(monthly, cur);
   }, 0);
+
   const yearlyTotal = active.reduce((sum, s) => {
-    if (s.cycle === "monthly") return sum + s.price * 12;
-    return sum + s.price;
+    const cur = (s.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR";
+    const yearly = s.cycle === "monthly" ? s.price * 12 : s.price;
+    return sum + convertAmount(yearly, cur);
   }, 0);
+
+  const fmt = (amount: number) =>
+    formatCurrency(amount, currencies[displayCurrency]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -48,7 +56,7 @@ export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
           />
         </div>
         <div className="text-3xl font-bold tracking-tight font-mono">
-          {convertAndFormat(monthlyTotal)}
+          {fmt(monthlyTotal)}
         </div>
         <p className="text-muted text-sm mt-2">{t.stats.monthlySub}</p>
       </div>
@@ -64,7 +72,7 @@ export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
           />
         </div>
         <div className="text-3xl font-bold tracking-tight font-mono">
-          {convertAndFormat(yearlyTotal)}
+          {fmt(yearlyTotal)}
         </div>
         <p className="text-muted text-sm mt-2">{t.stats.yearlySub}</p>
       </div>

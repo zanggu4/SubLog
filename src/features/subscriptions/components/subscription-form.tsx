@@ -20,6 +20,7 @@ export function SubscriptionForm() {
     const body = {
       name: form.get("name") as string,
       price: Number(form.get("price")),
+      currency: form.get("currency") as string,
       cycle: form.get("cycle") as string,
       billing_day: Number(form.get("billing_day")),
     };
@@ -88,24 +89,35 @@ export function SubscriptionForm() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-muted mb-1.5">
-                {t.form.priceLabel} (₩)
+                {t.form.priceLabel}
               </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted font-mono">
-                  ₩
-                </span>
-                <input
-                  name="price"
-                  type="number"
-                  required
-                  min="1"
-                  placeholder="17000"
-                  className="w-full bg-background border border-border rounded-lg pl-8 pr-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
-                />
-              </div>
+              <input
+                name="price"
+                type="number"
+                required
+                min="1"
+                step="any"
+                placeholder="17000"
+                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-muted mb-1.5">
+                {t.currency.label}
+              </label>
+              <select
+                name="currency"
+                defaultValue="KRW"
+                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
+              >
+                <option value="KRW">₩ KRW</option>
+                <option value="USD">$ USD</option>
+                <option value="JPY">¥ JPY</option>
+                <option value="EUR">€ EUR</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-muted mb-1.5">

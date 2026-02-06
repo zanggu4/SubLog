@@ -16,6 +16,7 @@ import {
 } from "./currency";
 
 interface ExchangeRates {
+  /** All rates relative to USD. e.g. { USD: 1, KRW: 1350, JPY: 150, EUR: 0.92 } */
   rates: Record<string, number>;
   updatedAt: string | null;
 }
@@ -26,10 +27,14 @@ interface SettingsContextValue {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: Translations;
-  currencyCode: CurrencyCode;
-  setCurrencyCode: (code: CurrencyCode) => void;
-  currency: CurrencyConfig;
-  convertAndFormat: (krwAmount: number) => string;
+  displayCurrency: CurrencyCode;
+  setDisplayCurrency: (code: CurrencyCode) => void;
+  /** Format amount in its original currency */
+  formatOriginal: (amount: number, fromCurrency: CurrencyCode) => string;
+  /** Convert from any currency to display currency and format */
+  convertToDisplay: (amount: number, fromCurrency: CurrencyCode) => string;
+  /** Convert raw number from any currency to display currency */
+  convertAmount: (amount: number, fromCurrency: CurrencyCode) => number;
   exchangeRates: ExchangeRates | null;
 }
 
@@ -38,12 +43,11 @@ const SettingsContext = createContext<SettingsContextValue | null>(null);
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [language, setLanguage] = useState<Language>("ko");
-  const [currencyCode, setCurrencyCode] = useState<CurrencyCode>("KRW");
+  const [displayCurrency, setDisplayCurrency] = useState<CurrencyCode>("KRW");
   const [exchangeRates, setExchangeRates] = useState<ExchangeRates | null>(
     null
   );
 
-  // Init from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem("sublog-theme") as
       | "light"
@@ -72,10 +76,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const savedCurrency = localStorage.getItem(
       "sublog-currency"
     ) as CurrencyCode | null;
-    if (savedCurrency) setCurrencyCode(savedCurrency);
+    if (savedCurrency) setDisplayCurrency(savedCurrency);
   }, []);
 
-  // Apply theme to DOM
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem("sublog-theme", theme);
@@ -86,10 +89,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, [language]);
 
   useEffect(() => {
-    localStorage.setItem("sublog-currency", currencyCode);
-  }, [currencyCode]);
+    localStorage.setItem("sublog-currency", displayCurrency);
+  }, [displayCurrency]);
 
-  // Fetch exchange rates
   useEffect(() => {
     fetch("/api/exchange-rates")
       .then((res) => res.json())
@@ -102,14 +104,33 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const toggleTheme = () =>
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
-  const currency = currencies[currencyCode];
+  /** Convert amount from one currency to another using USD-based rates */
+  const convertAmount = (
+    amount: number,
+    fromCurrency: CurrencyCode
+  ): number => {
+    if (fromCurrency === displayCurrency) return amount;
+    if (!exchangeRates) return amount;
 
-  const convertAndFormat = (krwAmount: number): string => {
-    if (currencyCode === "KRW" || !exchangeRates) {
-      return formatCurrency(krwAmount, currencies.KRW);
-    }
-    const rate = exchangeRates.rates[currencyCode] ?? 1;
-    return formatCurrency(krwAmount * rate, currency);
+    const fromRate = exchangeRates.rates[fromCurrency] ?? 1;
+    const toRate = exchangeRates.rates[displayCurrency] ?? 1;
+    // from → USD → to
+    return (amount / fromRate) * toRate;
+  };
+
+  const formatOriginal = (
+    amount: number,
+    fromCurrency: CurrencyCode
+  ): string => {
+    return formatCurrency(amount, currencies[fromCurrency]);
+  };
+
+  const convertToDisplay = (
+    amount: number,
+    fromCurrency: CurrencyCode
+  ): string => {
+    const converted = convertAmount(amount, fromCurrency);
+    return formatCurrency(converted, currencies[displayCurrency]);
   };
 
   return (
@@ -120,10 +141,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         language,
         setLanguage,
         t: translations[language],
-        currencyCode,
-        setCurrencyCode,
-        currency,
-        convertAndFormat,
+        displayCurrency,
+        setDisplayCurrency,
+        formatOriginal,
+        convertToDisplay,
+        convertAmount,
         exchangeRates,
       }}
     >

@@ -13,7 +13,7 @@ interface SubscriptionCardProps {
 
 export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   const router = useRouter();
-  const { t, convertAndFormat } = useSettings();
+  const { t, displayCurrency, formatOriginal, convertToDisplay } = useSettings();
   const [cancelOpen, setCancelOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -74,8 +74,13 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
           </div>
           <div className="text-right">
             <div className="font-mono text-xl font-bold">
-              {convertAndFormat(subscription.price)}
+              {formatOriginal(subscription.price, (subscription.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR")}
             </div>
+            {(subscription.currency ?? "KRW") !== displayCurrency && (
+              <div className="text-xs text-muted font-mono">
+                {convertToDisplay(subscription.price, (subscription.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR")}
+              </div>
+            )}
             <div className="text-xs text-muted uppercase tracking-wide">
               / {subscription.cycle === "monthly" ? t.form.monthly : t.form.yearly}
             </div>

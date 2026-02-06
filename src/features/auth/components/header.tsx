@@ -14,8 +14,8 @@ export function Header() {
     toggleTheme,
     language,
     setLanguage,
-    currencyCode,
-    setCurrencyCode,
+    displayCurrency,
+    setDisplayCurrency,
   } = useSettings();
 
   return (
@@ -39,9 +39,9 @@ export function Header() {
           {/* Currency */}
           <div className="flex items-center text-muted bg-background px-2 py-1.5 rounded-md text-xs font-mono border border-border">
             <select
-              value={currencyCode}
+              value={displayCurrency}
               onChange={(e) =>
-                setCurrencyCode(e.target.value as CurrencyCode)
+                setDisplayCurrency(e.target.value as CurrencyCode)
               }
               className="bg-transparent border-none outline-none appearance-none cursor-pointer font-bold"
             >
