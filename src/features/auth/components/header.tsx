@@ -85,7 +85,7 @@ export function Header() {
                 <span className="font-mono">{session.user.login}</span>
               </div>
               <button
-                onClick={() => signOut({ callbackUrl: "/" })}
+                onClick={() => signOut({ callbackUrl: `/${language}` })}
                 className="p-2 hover:bg-background rounded-md text-muted hover:text-foreground transition-colors cursor-pointer"
                 title="Logout"
               >

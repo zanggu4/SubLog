@@ -2,6 +2,13 @@ export type Language = "en" | "ko" | "ja" | "zh";
 
 export interface Translations {
   app: { title: string; subtitle: string };
+  seo: {
+    title: string;
+    description: string;
+    loginTitle: string;
+    loginDescription: string;
+    loginSubtitle: string;
+  };
   landing: {
     heroTitle: string;
     heroSubtitle: string;
@@ -104,6 +111,13 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   en: {
     app: { title: "SubLog", subtitle: 'git commit -m "track expenses"' },
+    seo: {
+      title: "SubLog - Subscription Tracker Powered by Git",
+      description: "Manage your subscriptions like you manage your code. Every change is a commit. No database — just GitHub.",
+      loginTitle: "Sign In",
+      loginDescription: "Sign in to SubLog with your GitHub account to start tracking subscriptions.",
+      loginSubtitle: "Sign in to manage your subscriptions",
+    },
     landing: {
       heroTitle: "SubLog",
       heroSubtitle:
@@ -207,6 +221,13 @@ export const translations: Record<Language, Translations> = {
   },
   ko: {
     app: { title: "SubLog", subtitle: 'git commit -m "지출 추적"' },
+    seo: {
+      title: "SubLog - Git 기반 구독 관리 가계부",
+      description: "구독을 코드처럼 관리하세요. 모든 변경은 커밋으로 기록됩니다. DB 없이 GitHub만으로.",
+      loginTitle: "로그인",
+      loginDescription: "GitHub 계정으로 SubLog에 로그인하여 구독 관리를 시작하세요.",
+      loginSubtitle: "로그인하여 구독을 관리하세요",
+    },
     landing: {
       heroTitle: "SubLog",
       heroSubtitle:
@@ -307,6 +328,13 @@ export const translations: Record<Language, Translations> = {
   },
   ja: {
     app: { title: "SubLog", subtitle: 'git commit -m "経費追跡"' },
+    seo: {
+      title: "SubLog - Git ベースのサブスクリプション管理",
+      description: "サブスクリプションをコードのように管理。すべての変更はコミットとして記録。データベース不要 — GitHubだけ。",
+      loginTitle: "ログイン",
+      loginDescription: "GitHubアカウントでSubLogにログインして、サブスクリプション管理を始めましょう。",
+      loginSubtitle: "ログインしてサブスクリプションを管理",
+    },
     landing: {
       heroTitle: "SubLog",
       heroSubtitle:
@@ -408,6 +436,13 @@ export const translations: Record<Language, Translations> = {
   },
   zh: {
     app: { title: "SubLog", subtitle: 'git commit -m "追踪开支"' },
+    seo: {
+      title: "SubLog - 基于 Git 的订阅管理工具",
+      description: "像管理代码一样管理您的订阅。每一个变更都是一次提交。无需数据库 — 只需 GitHub。",
+      loginTitle: "登录",
+      loginDescription: "使用 GitHub 账号登录 SubLog，开始管理您的订阅。",
+      loginSubtitle: "登录以管理您的订阅",
+    },
     landing: {
       heroTitle: "SubLog",
       heroSubtitle:

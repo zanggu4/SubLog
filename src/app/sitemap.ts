@@ -1,18 +1,25 @@
 import type { MetadataRoute } from "next";
 
+const BASE_URL = "https://sublog.bbiero.dev";
+const SUPPORTED_LANGS = ["en", "ko", "ja", "zh"];
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: "https://sublog.bbiero.dev",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    {
-      url: "https://sublog.bbiero.dev/login",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
+  const pages = [
+    { path: "", priority: 1 },
+    { path: "/login", priority: 0.5 },
   ];
+
+  return pages.flatMap(({ path, priority }) =>
+    SUPPORTED_LANGS.map((lang) => ({
+      url: `${BASE_URL}/${lang}${path}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority,
+      alternates: {
+        languages: Object.fromEntries(
+          SUPPORTED_LANGS.map((l) => [l, `${BASE_URL}/${l}${path}`])
+        ),
+      },
+    }))
+  );
 }

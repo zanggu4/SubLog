@@ -86,6 +86,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     localStorage.setItem("sublog-lang", language);
+    document.cookie = `sublog-lang=${language};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
+    document.documentElement.lang = language;
   }, [language]);
 
   useEffect(() => {

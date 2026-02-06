@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { auth } from "@/lib/auth";
 import { Header } from "@/features/auth/components/header";
 import { DashboardFooter } from "@/features/auth/components/footer";
@@ -15,7 +16,11 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session) {
+    const cookieStore = await cookies();
+    const lang = cookieStore.get("sublog-lang")?.value || "ko";
+    redirect(`/${lang}/login`);
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
