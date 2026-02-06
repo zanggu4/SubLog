@@ -8,8 +8,8 @@ import {
   CheckCircle2,
   XCircle,
   Pencil,
-  PauseCircle,
-  PlayCircle,
+  CirclePause,
+  CirclePlay,
 } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
 import { Dialog } from "@/components/ui/dialog";
@@ -116,7 +116,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
     </div>
   ) : isPaused ? (
     <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400">
-      <PauseCircle size={12} />
+      <CirclePause size={12} />
       {t.subs.statusPaused}
     </div>
   ) : (
@@ -216,10 +216,10 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         {!isPaused && !isCancelled && <div className="mb-3" />}
 
         {isActive && (
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setEditOpen(true)}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors border border-border text-muted hover:bg-primary/5 hover:text-primary hover:border-primary/30 cursor-pointer"
+              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-primary/5 hover:text-primary hover:border-primary/30 cursor-pointer"
             >
               <Pencil size={16} />
               {t.subs.editBtn}
@@ -227,15 +227,15 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             <button
               onClick={() => setPauseOpen(true)}
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors border border-border text-muted hover:bg-amber-500/5 hover:text-amber-600 hover:border-amber-500/30 disabled:opacity-50 cursor-pointer"
+              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-amber-500/5 hover:text-amber-600 hover:border-amber-500/30 disabled:opacity-50 cursor-pointer"
             >
-              <PauseCircle size={16} />
+              <CirclePause size={16} />
               {t.subs.pauseBtn}
             </button>
             <button
               onClick={() => setCancelOpen(true)}
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors border border-border text-muted hover:bg-danger/5 hover:text-danger hover:border-danger/30 disabled:opacity-50 cursor-pointer"
+              className="col-span-2 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-danger/5 hover:text-danger hover:border-danger/30 disabled:opacity-50 cursor-pointer"
             >
               <Trash2 size={16} />
               {t.subs.cancelBtn}
@@ -252,7 +252,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             {loading ? (
               <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
-              <PlayCircle size={16} />
+              <CirclePlay size={16} />
             )}
             {loading ? t.subs.committing : t.subs.resumeBtn}
           </button>
@@ -303,7 +303,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
               {loading ? (
                 <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
               ) : (
-                <PauseCircle size={16} />
+                <CirclePause size={16} />
               )}
               {t.subs.pauseBtn}
             </button>
