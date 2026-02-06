@@ -103,7 +103,7 @@ export function SubscriptionForm() {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-muted mb-1.5">
                 {t.currency.label}
@@ -131,20 +131,6 @@ export function SubscriptionForm() {
                 step="any"
                 placeholder="17000"
                 className="w-full bg-background border border-border rounded-lg px-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-muted mb-1.5">
-                {t.form.billingDayLabel}
-              </label>
-              <input
-                name="billing_day"
-                type="number"
-                required
-                min="1"
-                max="31"
-                defaultValue="1"
-                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
               />
             </div>
           </div>
@@ -178,24 +164,40 @@ export function SubscriptionForm() {
             </div>
           </div>
 
-          {cycle === "yearly" && (
+          <div className={`grid gap-4 ${cycle === "yearly" ? "grid-cols-2" : "grid-cols-1"}`}>
+            {cycle === "yearly" && (
+              <div>
+                <label className="block text-sm font-medium text-muted mb-1.5">
+                  {t.form.billingMonthLabel}
+                </label>
+                <select
+                  name="billing_month"
+                  className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                >
+                  <option value="">-</option>
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium text-muted mb-1.5">
-                {t.form.billingMonthLabel}
+                {t.form.billingDayLabel}
               </label>
-              <select
-                name="billing_month"
-                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-              >
-                <option value="">-</option>
-                {Array.from({ length: 12 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </option>
-                ))}
-              </select>
+              <input
+                name="billing_day"
+                type="number"
+                required
+                min="1"
+                max="31"
+                defaultValue="1"
+                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
+              />
             </div>
-          )}
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-muted mb-1.5">
