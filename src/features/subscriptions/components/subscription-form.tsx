@@ -19,6 +19,7 @@ export function SubscriptionForm() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,6 +35,8 @@ export function SubscriptionForm() {
       billing_day: Number(form.get("billing_day")),
     };
     if (category) body.category = category;
+    const billingMonth = form.get("billing_month") as string;
+    if (billingMonth) body.billing_month = Number(billingMonth);
 
     try {
       const res = await fetch("/api/subscriptions", {
@@ -157,6 +160,7 @@ export function SubscriptionForm() {
                   name="cycle"
                   value="monthly"
                   defaultChecked
+                  onChange={() => setCycle("monthly")}
                   className="sr-only"
                 />
                 {t.form.monthly}
@@ -166,12 +170,32 @@ export function SubscriptionForm() {
                   type="radio"
                   name="cycle"
                   value="yearly"
+                  onChange={() => setCycle("yearly")}
                   className="sr-only"
                 />
                 {t.form.yearly}
               </label>
             </div>
           </div>
+
+          {cycle === "yearly" && (
+            <div>
+              <label className="block text-sm font-medium text-muted mb-1.5">
+                {t.form.billingMonthLabel}
+              </label>
+              <select
+                name="billing_month"
+                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+              >
+                <option value="">-</option>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-muted mb-1.5">

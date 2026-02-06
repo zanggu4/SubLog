@@ -29,6 +29,7 @@ export function EditSubscriptionDialog({
   const { t } = useSettings();
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [editCycle, setEditCycle] = useState(subscription.cycle);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,6 +45,8 @@ export function EditSubscriptionDialog({
       billing_day: Number(form.get("billing_day")),
     };
     if (category) body.category = category;
+    const billingMonth = form.get("billing_month") as string;
+    if (billingMonth) body.billing_month = Number(billingMonth);
 
     try {
       const res = await fetch(`/api/subscriptions/${subscription.id}`, {
@@ -147,6 +150,7 @@ export function EditSubscriptionDialog({
                   name="cycle"
                   value="monthly"
                   defaultChecked={subscription.cycle === "monthly"}
+                  onChange={() => setEditCycle("monthly")}
                   className="sr-only"
                 />
                 {t.form.monthly}
@@ -157,12 +161,33 @@ export function EditSubscriptionDialog({
                   name="cycle"
                   value="yearly"
                   defaultChecked={subscription.cycle === "yearly"}
+                  onChange={() => setEditCycle("yearly")}
                   className="sr-only"
                 />
                 {t.form.yearly}
               </label>
             </div>
           </div>
+
+          {editCycle === "yearly" && (
+            <div>
+              <label className="block text-sm font-medium text-muted mb-1.5">
+                {t.form.billingMonthLabel}
+              </label>
+              <select
+                name="billing_month"
+                defaultValue={subscription.billing_month ?? ""}
+                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+              >
+                <option value="">-</option>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-muted mb-1.5">

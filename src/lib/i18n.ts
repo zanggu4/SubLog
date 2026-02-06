@@ -59,6 +59,21 @@ export interface Translations {
     saveBtn: string;
     categoryLabel: string;
     categoryPlaceholder: string;
+    billingMonthLabel: string;
+  };
+  calendar: {
+    title: string;
+    sun: string;
+    mon: string;
+    tue: string;
+    wed: string;
+    thu: string;
+    fri: string;
+    sat: string;
+    today: string;
+    noPayments: string;
+    listView: string;
+    calendarView: string;
   };
   history: {
     title: string;
@@ -151,6 +166,21 @@ export const translations: Record<Language, Translations> = {
       saveBtn: "Save Changes",
       categoryLabel: "Category",
       categoryPlaceholder: "Select category",
+      billingMonthLabel: "Billing Month",
+    },
+    calendar: {
+      title: "Payment Calendar",
+      sun: "Sun",
+      mon: "Mon",
+      tue: "Tue",
+      wed: "Wed",
+      thu: "Thu",
+      fri: "Fri",
+      sat: "Sat",
+      today: "Today",
+      noPayments: "No payments",
+      listView: "List View",
+      calendarView: "Calendar View",
     },
     history: {
       title: "Ledger",
@@ -236,6 +266,21 @@ export const translations: Record<Language, Translations> = {
       saveBtn: "변경 사항 저장",
       categoryLabel: "카테고리",
       categoryPlaceholder: "카테고리 선택",
+      billingMonthLabel: "결제월",
+    },
+    calendar: {
+      title: "결제 캘린더",
+      sun: "일",
+      mon: "월",
+      tue: "화",
+      wed: "수",
+      thu: "목",
+      fri: "금",
+      sat: "토",
+      today: "오늘",
+      noPayments: "결제 없음",
+      listView: "목록 보기",
+      calendarView: "캘린더 보기",
     },
     history: {
       title: "장부 (Ledger)",
@@ -322,6 +367,21 @@ export const translations: Record<Language, Translations> = {
       saveBtn: "変更を保存",
       categoryLabel: "カテゴリ",
       categoryPlaceholder: "カテゴリを選択",
+      billingMonthLabel: "請求月",
+    },
+    calendar: {
+      title: "支払いカレンダー",
+      sun: "日",
+      mon: "月",
+      tue: "火",
+      wed: "水",
+      thu: "木",
+      fri: "金",
+      sat: "土",
+      today: "今日",
+      noPayments: "支払いなし",
+      listView: "リスト表示",
+      calendarView: "カレンダー表示",
     },
     history: {
       title: "台帳 (Ledger)",
@@ -406,6 +466,21 @@ export const translations: Record<Language, Translations> = {
       saveBtn: "保存更改",
       categoryLabel: "分类",
       categoryPlaceholder: "选择分类",
+      billingMonthLabel: "扣款月份",
+    },
+    calendar: {
+      title: "付款日历",
+      sun: "日",
+      mon: "一",
+      tue: "二",
+      wed: "三",
+      thu: "四",
+      fri: "五",
+      sat: "六",
+      today: "今天",
+      noPayments: "无付款",
+      listView: "列表视图",
+      calendarView: "日历视图",
     },
     history: {
       title: "账本 (Ledger)",

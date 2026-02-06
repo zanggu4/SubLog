@@ -197,7 +197,9 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
           <span>
             {t.subs.billsOn}{" "}
             <span className="text-foreground font-mono">
-              {subscription.billing_day}
+              {subscription.cycle === "yearly" && subscription.billing_month
+                ? `${subscription.billing_month}/${subscription.billing_day}`
+                : subscription.billing_day}
             </span>
           </span>
         </div>

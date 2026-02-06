@@ -34,6 +34,7 @@ export const SubscriptionSchema = z.object({
   status: z.enum(["active", "paused", "cancelled"]),
   pausedUntil: z.string().datetime().optional(),
   category: z.enum(CATEGORIES).optional(),
+  billing_month: z.number().int().min(1).max(12).optional(),
 });
 
 export const CreateSubscriptionSchema = SubscriptionSchema.omit({

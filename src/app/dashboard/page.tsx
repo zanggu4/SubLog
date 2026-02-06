@@ -3,11 +3,9 @@ import { createOctokit } from "@/lib/octokit";
 import { getOrCreateRepo } from "@/features/github/services/repo";
 import { readSubscriptions } from "@/features/github/services/content";
 import { DashboardSummary } from "@/features/subscriptions/components/dashboard-summary";
-import { SubscriptionList } from "@/features/subscriptions/components/subscription-list";
-import { SubscriptionForm } from "@/features/subscriptions/components/subscription-form";
+import { DashboardContent } from "@/features/subscriptions/components/dashboard-content";
 import { CommitHistory } from "@/features/subscriptions/components/commit-history";
 import { CategoryBreakdown } from "@/features/subscriptions/components/category-breakdown";
-import { DashboardTitle } from "@/features/subscriptions/components/dashboard-title";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -26,10 +24,8 @@ export default async function DashboardPage() {
       <DashboardSummary subscriptions={subscriptions} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <DashboardTitle />
-          <SubscriptionForm />
-          <SubscriptionList subscriptions={subscriptions} />
+        <div className="lg:col-span-2">
+          <DashboardContent subscriptions={subscriptions} />
         </div>
 
         <div className="lg:col-span-1 space-y-6">
