@@ -101,7 +101,7 @@ export function SubscriptionList({ subscriptions }: SubscriptionListProps) {
         </div>
       )}
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-start">
         {sorted.map((s) => (
           <SubscriptionCard key={s.id} subscription={s} />
         ))}

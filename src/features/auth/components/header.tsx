@@ -37,7 +37,7 @@ export function Header() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Currency */}
-          <div className="flex items-center text-muted bg-background px-2 py-1.5 rounded-md text-xs font-mono border border-border">
+          <div className="flex items-center text-muted bg-background px-2 py-1.5 rounded-md text-xs border border-border">
             <select
               value={displayCurrency}
               onChange={(e) =>
@@ -49,16 +49,18 @@ export function Header() {
               <option value="USD">$ USD</option>
               <option value="JPY">¥ JPY</option>
               <option value="EUR">€ EUR</option>
+              <option value="CNY">¥ CNY</option>
             </select>
           </div>
 
           {/* Language */}
-          <div className="flex items-center gap-1 text-muted bg-background px-2 py-1.5 rounded-md text-xs font-mono border border-border">
-            <Globe size={14} />
+          <div className="relative flex items-center gap-1 text-muted bg-background px-2 py-1.5 rounded-md text-xs border border-border cursor-pointer">
+            <Globe size={14} className="pointer-events-none" />
+            <span className="uppercase font-bold pointer-events-none pr-1">{language}</span>
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-transparent border-none outline-none appearance-none cursor-pointer uppercase font-bold pr-1"
+              className="absolute inset-0 opacity-0 cursor-pointer"
             >
               <option value="en">EN</option>
               <option value="ko">KO</option>

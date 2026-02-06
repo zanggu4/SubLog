@@ -12,6 +12,7 @@ import {
   CirclePlay,
 } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
+import type { CurrencyCode } from "@/lib/currency";
 import { Dialog } from "@/components/ui/dialog";
 import { EditSubscriptionDialog } from "./edit-subscription-dialog";
 import { CATEGORY_CONFIG, type Category, type Subscription } from "@/features/subscriptions/types";
@@ -143,60 +144,54 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
           }
         `}
       >
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h3 className="font-bold text-lg mb-1">{subscription.name}</h3>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {statusBadge}
-              {subscription.category && (
-                <span
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border"
-                  style={{
-                    backgroundColor: CATEGORY_CONFIG[subscription.category as Category]?.color + "15",
-                    borderColor: CATEGORY_CONFIG[subscription.category as Category]?.color + "30",
-                    color: CATEGORY_CONFIG[subscription.category as Category]?.color,
-                  }}
-                >
-                  {CATEGORY_CONFIG[subscription.category as Category]?.icon}
-                  {t.categories[subscription.category as keyof typeof t.categories]}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="font-mono text-xl font-bold">
-              {formatOriginal(
+        <div className="flex items-center gap-1.5 mb-2">
+          {statusBadge}
+          {subscription.category && (
+            <span
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border"
+              style={{
+                backgroundColor: CATEGORY_CONFIG[subscription.category as Category]?.color + "15",
+                borderColor: CATEGORY_CONFIG[subscription.category as Category]?.color + "30",
+                color: CATEGORY_CONFIG[subscription.category as Category]?.color,
+              }}
+            >
+              {CATEGORY_CONFIG[subscription.category as Category]?.icon}
+              {t.categories[subscription.category as keyof typeof t.categories]}
+            </span>
+          )}
+        </div>
+
+        <h3 className="font-bold text-lg break-words mb-1">{subscription.name}</h3>
+
+        <div className="flex items-baseline gap-2 mb-2">
+          <span className="text-lg font-bold tabular-nums">
+            {formatOriginal(
+              subscription.price,
+              (subscription.currency ?? "KRW") as CurrencyCode
+            )}
+          </span>
+          <span className="text-sm text-muted">
+            /{" "}
+            {subscription.cycle === "monthly"
+              ? t.form.monthly
+              : t.form.yearly}
+          </span>
+          {(subscription.currency ?? "KRW") !== displayCurrency && (
+            <span className="text-xs text-muted tabular-nums">
+              ({convertToDisplay(
                 subscription.price,
                 (subscription.currency ?? "KRW") as
                   | "KRW"
                   | "USD"
                   | "JPY"
                   | "EUR"
-              )}
-            </div>
-            {(subscription.currency ?? "KRW") !== displayCurrency && (
-              <div className="text-xs text-muted font-mono">
-                {convertToDisplay(
-                  subscription.price,
-                  (subscription.currency ?? "KRW") as
-                    | "KRW"
-                    | "USD"
-                    | "JPY"
-                    | "EUR"
-                )}
-              </div>
-            )}
-            <div className="text-xs text-muted uppercase tracking-wide">
-              /{" "}
-              {subscription.cycle === "monthly"
-                ? t.form.monthly
-                : t.form.yearly}
-            </div>
-          </div>
+              )})
+            </span>
+          )}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-muted mb-1">
-          <Calendar size={14} />
+        <div className="flex items-center gap-2 text-xs text-muted mb-1">
+          <Calendar size={12} />
           <span>
             {t.subs.billsOn}{" "}
             <span className="text-foreground font-mono">
@@ -208,7 +203,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         </div>
 
         {isPaused && subscription.pausedUntil && (
-          <div className="text-xs text-amber-600 dark:text-amber-400 mb-3">
+          <div className="text-xs text-amber-600 dark:text-amber-400 mb-2">
             {t.subs.pausedUntil.replace(
               "{date}",
               new Date(subscription.pausedUntil).toLocaleDateString()
@@ -216,13 +211,13 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
           </div>
         )}
 
-        {!isPaused && !isCancelled && <div className="mb-3" />}
+        {!isPaused && !isCancelled && <div className="mb-2" />}
 
         {isActive && (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setEditOpen(true)}
-              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-primary/5 hover:text-primary hover:border-primary/30 cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-primary/5 hover:text-primary hover:border-primary/30 cursor-pointer"
             >
               <Pencil size={16} />
               {t.subs.editBtn}
@@ -230,7 +225,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             <button
               onClick={() => setPauseOpen(true)}
               disabled={loading}
-              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-amber-500/5 hover:text-amber-600 hover:border-amber-500/30 disabled:opacity-50 cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-amber-500/5 hover:text-amber-600 hover:border-amber-500/30 disabled:opacity-50 cursor-pointer"
             >
               <CirclePause size={16} />
               {t.subs.pauseBtn}
@@ -238,10 +233,10 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             <button
               onClick={() => setCancelOpen(true)}
               disabled={loading}
-              className="col-span-2 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border border-border text-muted hover:bg-danger/5 hover:text-danger hover:border-danger/30 disabled:opacity-50 cursor-pointer"
+              className="py-2 px-2.5 rounded-lg transition-colors border border-border text-muted hover:bg-danger/5 hover:text-danger hover:border-danger/30 disabled:opacity-50 cursor-pointer"
+              title={t.subs.cancelBtn}
             >
               <Trash2 size={16} />
-              {t.subs.cancelBtn}
             </button>
           </div>
         )}

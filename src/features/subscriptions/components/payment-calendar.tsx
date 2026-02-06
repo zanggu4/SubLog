@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
-import { currencies, formatCurrency } from "@/lib/currency";
+import { currencies, formatCurrency, type CurrencyCode } from "@/lib/currency";
 import { CATEGORY_CONFIG, type Category, type Subscription } from "@/features/subscriptions/types";
 
 interface PaymentCalendarProps {
@@ -43,7 +43,7 @@ export function PaymentCalendar({ subscriptions }: PaymentCalendarProps) {
   const dayPayments: Record<number, DayPayment[]> = {};
 
   active.forEach((s) => {
-    const cur = (s.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR";
+    const cur = (s.currency ?? "KRW") as CurrencyCode;
     const amount = convertAmount(s.price, cur);
     const catColor = CATEGORY_CONFIG[(s.category ?? "other") as Category]?.color ?? "#6B7280";
 
@@ -195,7 +195,7 @@ export function PaymentCalendar({ subscriptions }: PaymentCalendarProps) {
               </div>
 
               {dayTotal > 0 && (
-                <div className="text-[10px] font-mono text-muted mt-auto pt-0.5 truncate">
+                <div className="text-[10px] tabular-nums text-muted mt-auto pt-0.5 truncate">
                   {fmt(dayTotal)}
                 </div>
               )}

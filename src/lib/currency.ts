@@ -1,4 +1,4 @@
-export type CurrencyCode = "KRW" | "USD" | "JPY" | "EUR";
+export type CurrencyCode = "KRW" | "USD" | "JPY" | "EUR" | "CNY";
 
 export interface CurrencyConfig {
   code: CurrencyCode;
@@ -12,6 +12,7 @@ export const currencies: Record<CurrencyCode, CurrencyConfig> = {
   USD: { code: "USD", symbol: "$", locale: "en-US", decimals: 2 },
   JPY: { code: "JPY", symbol: "¥", locale: "ja-JP", decimals: 0 },
   EUR: { code: "EUR", symbol: "€", locale: "de-DE", decimals: 2 },
+  CNY: { code: "CNY", symbol: "¥", locale: "zh-CN", decimals: 2 },
 };
 
 export function formatCurrency(

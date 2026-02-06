@@ -40,7 +40,7 @@ export function Dialog({
     <dialog
       ref={ref}
       onClose={onClose}
-      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 rounded-xl border border-border bg-card p-0 backdrop:bg-black/50 max-w-md w-[calc(100%-2rem)]"
+      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 rounded-xl border border-border bg-card text-foreground p-0 backdrop:bg-black/50 max-w-md w-[calc(100%-2rem)]"
     >
       <div className="p-6">
         <h2 className="text-lg font-semibold mb-4">{title}</h2>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSettings } from "@/lib/settings-context";
-import { currencies, formatCurrency } from "@/lib/currency";
+import { currencies, formatCurrency, type CurrencyCode } from "@/lib/currency";
 import {
   CATEGORY_CONFIG,
   type Category,
@@ -20,7 +20,7 @@ export function CategoryBreakdown({ subscriptions }: CategoryBreakdownProps) {
   const categoryTotals = active.reduce<Record<Category, number>>(
     (acc, s) => {
       const cat = (s.category ?? "other") as Category;
-      const cur = (s.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR";
+      const cur = (s.currency ?? "KRW") as CurrencyCode;
       const monthly = s.cycle === "yearly" ? s.price / 12 : s.price;
       acc[cat] = (acc[cat] ?? 0) + convertAmount(monthly, cur);
       return acc;
@@ -57,7 +57,7 @@ export function CategoryBreakdown({ subscriptions }: CategoryBreakdownProps) {
                   <span>{config.icon}</span>
                   {categoryName}
                 </span>
-                <span className="text-sm font-mono font-medium">
+                <span className="text-sm font-medium tabular-nums">
                   {fmt(total)}
                 </span>
               </div>

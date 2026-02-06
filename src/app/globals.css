@@ -26,7 +26,7 @@
   --color-danger-hover: var(--danger-hover);
   --color-success: var(--success);
   --color-amber: var(--amber);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: "SUIT Variable", "Noto Sans JP", "Noto Sans SC", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 

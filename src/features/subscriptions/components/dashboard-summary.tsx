@@ -2,7 +2,7 @@
 
 import { Activity, Wallet, CalendarRange } from "lucide-react";
 import { useSettings } from "@/lib/settings-context";
-import { currencies, formatCurrency } from "@/lib/currency";
+import { currencies, formatCurrency, type CurrencyCode } from "@/lib/currency";
 import type { Subscription } from "@/features/subscriptions/types";
 
 interface DashboardSummaryProps {
@@ -15,13 +15,13 @@ export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
   const pausedCount = subscriptions.filter((s) => s.status === "paused").length;
 
   const monthlyTotal = active.reduce((sum, s) => {
-    const cur = (s.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR";
+    const cur = (s.currency ?? "KRW") as CurrencyCode;
     const monthly = s.cycle === "yearly" ? s.price / 12 : s.price;
     return sum + convertAmount(monthly, cur);
   }, 0);
 
   const yearlyTotal = active.reduce((sum, s) => {
-    const cur = (s.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR";
+    const cur = (s.currency ?? "KRW") as CurrencyCode;
     const yearly = s.cycle === "monthly" ? s.price * 12 : s.price;
     return sum + convertAmount(yearly, cur);
   }, 0);
@@ -61,7 +61,7 @@ export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
             className="text-muted group-hover:text-primary transition-colors"
           />
         </div>
-        <div className="text-3xl font-bold tracking-tight font-mono">
+        <div className="text-2xl font-bold tracking-tight tabular-nums">
           {fmt(monthlyTotal)}
         </div>
         <p className="text-muted text-sm mt-2">{t.stats.monthlySub}</p>
@@ -77,7 +77,7 @@ export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
             className="text-muted group-hover:text-primary transition-colors"
           />
         </div>
-        <div className="text-3xl font-bold tracking-tight font-mono">
+        <div className="text-2xl font-bold tracking-tight tabular-nums">
           {fmt(yearlyTotal)}
         </div>
         <p className="text-muted text-sm mt-2">{t.stats.yearlySub}</p>

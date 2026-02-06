@@ -108,6 +108,7 @@ export function EditSubscriptionDialog({
                 <option value="USD">$ USD</option>
                 <option value="JPY">¥ JPY</option>
                 <option value="EUR">€ EUR</option>
+                <option value="CNY">¥ CNY</option>
               </select>
             </div>
             <div>
