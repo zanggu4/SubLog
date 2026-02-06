@@ -14,7 +14,7 @@ import {
 import { useSettings } from "@/lib/settings-context";
 import { Dialog } from "@/components/ui/dialog";
 import { EditSubscriptionDialog } from "./edit-subscription-dialog";
-import type { Subscription } from "@/features/subscriptions/types";
+import { CATEGORY_CONFIG, type Category, type Subscription } from "@/features/subscriptions/types";
 
 interface SubscriptionCardProps {
   subscription: Subscription;
@@ -143,7 +143,22 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="font-bold text-lg mb-1">{subscription.name}</h3>
-            {statusBadge}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {statusBadge}
+              {subscription.category && (
+                <span
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border"
+                  style={{
+                    backgroundColor: CATEGORY_CONFIG[subscription.category as Category]?.color + "15",
+                    borderColor: CATEGORY_CONFIG[subscription.category as Category]?.color + "30",
+                    color: CATEGORY_CONFIG[subscription.category as Category]?.color,
+                  }}
+                >
+                  {CATEGORY_CONFIG[subscription.category as Category]?.icon}
+                  {t.categories[subscription.category as keyof typeof t.categories]}
+                </span>
+              )}
+            </div>
           </div>
           <div className="text-right">
             <div className="font-mono text-xl font-bold">

@@ -6,6 +6,7 @@ import { DashboardSummary } from "@/features/subscriptions/components/dashboard-
 import { SubscriptionList } from "@/features/subscriptions/components/subscription-list";
 import { SubscriptionForm } from "@/features/subscriptions/components/subscription-form";
 import { CommitHistory } from "@/features/subscriptions/components/commit-history";
+import { CategoryBreakdown } from "@/features/subscriptions/components/category-breakdown";
 import { DashboardTitle } from "@/features/subscriptions/components/dashboard-title";
 
 export default async function DashboardPage() {
@@ -32,6 +33,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="lg:col-span-1 space-y-6">
+          <CategoryBreakdown subscriptions={subscriptions} />
           <CommitHistory />
         </div>
       </div>

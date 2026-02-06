@@ -57,6 +57,8 @@ export interface Translations {
     yearly: string;
     submit: string;
     saveBtn: string;
+    categoryLabel: string;
+    categoryPlaceholder: string;
   };
   history: {
     title: string;
@@ -65,6 +67,18 @@ export interface Translations {
     empty: string;
     prev: string;
     next: string;
+  };
+  categories: {
+    all: string;
+    breakdown: string;
+    entertainment: string;
+    development: string;
+    cloud: string;
+    productivity: string;
+    music: string;
+    shopping: string;
+    news: string;
+    other: string;
   };
   currency: {
     label: string;
@@ -135,6 +149,8 @@ export const translations: Record<Language, Translations> = {
       yearly: "Yearly",
       submit: "Add Subscription",
       saveBtn: "Save Changes",
+      categoryLabel: "Category",
+      categoryPlaceholder: "Select category",
     },
     history: {
       title: "Ledger",
@@ -143,6 +159,18 @@ export const translations: Record<Language, Translations> = {
       empty: "No commits found. Repository is clean.",
       prev: "Previous",
       next: "Next",
+    },
+    categories: {
+      all: "All",
+      breakdown: "Category Breakdown",
+      entertainment: "Entertainment",
+      development: "Development",
+      cloud: "Cloud",
+      productivity: "Productivity",
+      music: "Music",
+      shopping: "Shopping",
+      news: "News",
+      other: "Other",
     },
     currency: { label: "Currency" },
     footer: "© {year} SubLog. Powered by Git concepts.",
@@ -206,6 +234,8 @@ export const translations: Record<Language, Translations> = {
       yearly: "연간",
       submit: "구독 추가",
       saveBtn: "변경 사항 저장",
+      categoryLabel: "카테고리",
+      categoryPlaceholder: "카테고리 선택",
     },
     history: {
       title: "장부 (Ledger)",
@@ -214,6 +244,18 @@ export const translations: Record<Language, Translations> = {
       empty: "커밋이 없습니다. 저장소가 깨끗합니다.",
       prev: "이전",
       next: "다음",
+    },
+    categories: {
+      all: "전체",
+      breakdown: "카테고리별 지출",
+      entertainment: "엔터테인먼트",
+      development: "개발",
+      cloud: "클라우드",
+      productivity: "생산성",
+      music: "음악",
+      shopping: "쇼핑",
+      news: "뉴스",
+      other: "기타",
     },
     currency: { label: "통화" },
     footer: "© {year} SubLog. Git 컨셉으로 제작되었습니다.",
@@ -278,6 +320,8 @@ export const translations: Record<Language, Translations> = {
       yearly: "年次",
       submit: "追加する",
       saveBtn: "変更を保存",
+      categoryLabel: "カテゴリ",
+      categoryPlaceholder: "カテゴリを選択",
     },
     history: {
       title: "台帳 (Ledger)",
@@ -286,6 +330,18 @@ export const translations: Record<Language, Translations> = {
       empty: "コミットが見つかりません。",
       prev: "前へ",
       next: "次へ",
+    },
+    categories: {
+      all: "すべて",
+      breakdown: "カテゴリ別支出",
+      entertainment: "エンタメ",
+      development: "開発",
+      cloud: "クラウド",
+      productivity: "生産性",
+      music: "音楽",
+      shopping: "ショッピング",
+      news: "ニュース",
+      other: "その他",
     },
     currency: { label: "通貨" },
     footer: "© {year} SubLog. Powered by Git concepts.",
@@ -348,6 +404,8 @@ export const translations: Record<Language, Translations> = {
       yearly: "按年",
       submit: "添加订阅",
       saveBtn: "保存更改",
+      categoryLabel: "分类",
+      categoryPlaceholder: "选择分类",
     },
     history: {
       title: "账本 (Ledger)",
@@ -356,6 +414,18 @@ export const translations: Record<Language, Translations> = {
       empty: "未找到提交。仓库是干净的。",
       prev: "上一页",
       next: "下一页",
+    },
+    categories: {
+      all: "全部",
+      breakdown: "分类支出",
+      entertainment: "娱乐",
+      development: "开发",
+      cloud: "云服务",
+      productivity: "生产力",
+      music: "音乐",
+      shopping: "购物",
+      news: "新闻",
+      other: "其他",
     },
     currency: { label: "货币" },
     footer: "© {year} SubLog. 基于 Git 概念构建。",

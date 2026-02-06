@@ -7,7 +7,7 @@ import { useSettings } from "@/lib/settings-context";
 import { Dialog } from "@/components/ui/dialog";
 import { AutocompleteInput } from "./autocomplete-input";
 import { knownServices } from "../data/known-services";
-import type { Subscription } from "@/features/subscriptions/types";
+import { CATEGORIES, CATEGORY_CONFIG, type Subscription } from "@/features/subscriptions/types";
 
 const serviceOptions = knownServices.map((s) => ({
   label: s.name,
@@ -35,13 +35,15 @@ export function EditSubscriptionDialog({
     setLoading(true);
 
     const form = new FormData(e.currentTarget);
-    const body = {
+    const category = form.get("category") as string;
+    const body: Record<string, unknown> = {
       name: form.get("name") as string,
       price: Number(form.get("price")),
       currency: form.get("currency") as string,
       cycle: form.get("cycle") as string,
       billing_day: Number(form.get("billing_day")),
     };
+    if (category) body.category = category;
 
     try {
       const res = await fetch(`/api/subscriptions/${subscription.id}`, {
@@ -160,6 +162,24 @@ export function EditSubscriptionDialog({
                 {t.form.yearly}
               </label>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-muted mb-1.5">
+              {t.form.categoryLabel}
+            </label>
+            <select
+              name="category"
+              defaultValue={subscription.category ?? ""}
+              className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+            >
+              <option value="">{t.form.categoryPlaceholder}</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {CATEGORY_CONFIG[cat].icon} {t.categories[cat as keyof typeof t.categories]}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
