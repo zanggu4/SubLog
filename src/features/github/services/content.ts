@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/rest";
 import { REPO_NAME } from "./repo";
 import type { Subscription } from "@/features/subscriptions/types";
+import { generateId } from "@/features/subscriptions/services/id";
 
 const FILE_PATH = "subscriptions.json";
 
@@ -26,6 +27,14 @@ export async function readSubscriptions(
 
     const content = Buffer.from(data.content, "base64").toString("utf-8");
     const subscriptions: Subscription[] = JSON.parse(content);
+
+    // Migrate empty IDs from pre-unicode generateId
+    for (const sub of subscriptions) {
+      if (!sub.id) {
+        sub.id = generateId();
+      }
+    }
+
     return { subscriptions, sha: data.sha };
   } catch (error: unknown) {
     if (

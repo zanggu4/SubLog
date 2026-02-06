@@ -41,7 +41,8 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         method: "DELETE",
       });
       if (!res.ok) {
-        const data = await res.json();
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : {};
         throw new Error(data.error ?? "Failed to cancel");
       }
       setToast(`${subscription.name} — ${t.subs.statusCancelled}`);
@@ -73,7 +74,8 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         body: JSON.stringify(body),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : {};
         throw new Error(data.error ?? "Failed to pause");
       }
       setToast(`${subscription.name} — ${t.subs.statusPaused}`);
@@ -96,7 +98,8 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         body: JSON.stringify({ status: "active", pausedUntil: null }),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : {};
         throw new Error(data.error ?? "Failed to resume");
       }
       setToast(`${subscription.name} — ${t.subs.statusActive}`);

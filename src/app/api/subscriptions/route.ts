@@ -49,13 +49,7 @@ export async function POST(request: Request) {
     session.user.login
   );
 
-  const id = generateId(parsed.data.name);
-  if (subscriptions.some((s) => s.id === id)) {
-    return NextResponse.json(
-      { error: `Subscription "${parsed.data.name}" already exists` },
-      { status: 409 }
-    );
-  }
+  const id = generateId();
 
   const newSubscription = {
     id,

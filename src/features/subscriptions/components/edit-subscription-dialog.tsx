@@ -56,7 +56,8 @@ export function EditSubscriptionDialog({
       });
 
       if (!res.ok) {
-        const data = await res.json();
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : {};
         throw new Error(data.error ?? "Failed to update");
       }
 
