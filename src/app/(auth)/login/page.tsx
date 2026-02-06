@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Sign in to SubLog with your GitHub account to start tracking subscriptions.",
+};
 
 export default async function LoginPage() {
   const session = await auth();

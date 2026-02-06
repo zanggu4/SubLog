@@ -85,6 +85,26 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "SubLog",
+            url: "https://sublog.bbiero.dev",
+            description:
+              "Manage your subscriptions like you manage your code. Every change is a commit.",
+            applicationCategory: "FinanceApplication",
+            operatingSystem: "Web",
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+            },
+          }),
+        }}
+      />
     </div>
   );
 }
