@@ -7,15 +7,20 @@ export const SubscriptionSchema = z.object({
   currency: z.enum(["KRW", "USD", "JPY", "EUR"]).default("KRW"),
   cycle: z.enum(["monthly", "yearly"]),
   billing_day: z.number().int().min(1).max(31),
-  status: z.enum(["active", "cancelled"]),
+  status: z.enum(["active", "paused", "cancelled"]),
+  pausedUntil: z.string().datetime().optional(),
 });
 
 export const CreateSubscriptionSchema = SubscriptionSchema.omit({
   id: true,
   status: true,
+  pausedUntil: true,
 });
 
-export const UpdateSubscriptionSchema = CreateSubscriptionSchema.partial();
+export const UpdateSubscriptionSchema = CreateSubscriptionSchema.partial().extend({
+  status: z.enum(["active", "paused"]).optional(),
+  pausedUntil: z.string().datetime().nullable().optional(),
+});
 
 export type Subscription = z.infer<typeof SubscriptionSchema>;
 export type CreateSubscriptionInput = z.infer<typeof CreateSubscriptionSchema>;

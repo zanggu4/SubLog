@@ -24,9 +24,16 @@ export function SubscriptionList({ subscriptions }: SubscriptionListProps) {
     );
   }
 
+  const statusOrder: Record<string, number> = {
+    active: 0,
+    paused: 1,
+    cancelled: 2,
+  };
+
   const sorted = [...subscriptions].sort((a, b) => {
-    if (a.status === b.status) return b.price - a.price;
-    return a.status === "active" ? -1 : 1;
+    const statusDiff = (statusOrder[a.status] ?? 9) - (statusOrder[b.status] ?? 9);
+    if (statusDiff !== 0) return statusDiff;
+    return b.price - a.price;
   });
 
   return (

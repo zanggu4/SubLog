@@ -12,6 +12,7 @@ interface DashboardSummaryProps {
 export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
   const { t, displayCurrency, convertAmount } = useSettings();
   const active = subscriptions.filter((s) => s.status === "active");
+  const pausedCount = subscriptions.filter((s) => s.status === "paused").length;
 
   const monthlyTotal = active.reduce((sum, s) => {
     const cur = (s.currency ?? "KRW") as "KRW" | "USD" | "JPY" | "EUR";
@@ -43,6 +44,11 @@ export function DashboardSummary({ subscriptions }: DashboardSummaryProps) {
         <div className="text-3xl font-bold tracking-tight font-mono">
           {active.length}
         </div>
+        {pausedCount > 0 && (
+          <p className="text-muted text-sm mt-2">
+            {t.stats.paused}: {pausedCount}
+          </p>
+        )}
       </div>
 
       <div className="bg-card border border-border p-6 rounded-xl hover:border-muted/50 transition-all shadow-sm group">

@@ -10,6 +10,8 @@ import { UpdateSubscriptionSchema } from "@/features/subscriptions/types";
 import {
   updateMessage,
   cancelMessage,
+  pauseMessage,
+  resumeMessage,
 } from "@/features/subscriptions/services/commit-message";
 
 export async function PUT(
@@ -47,14 +49,53 @@ export async function PUT(
     );
   }
 
-  subscriptions[index] = { ...subscriptions[index], ...parsed.data };
+  const oldStatus = subscriptions[index].status;
+  const newStatus = parsed.data.status;
+
+  // Validate status transitions
+  if (newStatus) {
+    const validTransitions: Record<string, string[]> = {
+      active: ["paused"],
+      paused: ["active"],
+    };
+    if (!validTransitions[oldStatus]?.includes(newStatus)) {
+      return NextResponse.json(
+        { error: `Cannot transition from ${oldStatus} to ${newStatus}` },
+        { status: 400 }
+      );
+    }
+  }
+
+  // Build update data, converting null pausedUntil to undefined (deletion)
+  const { pausedUntil: rawPausedUntil, ...restData } = parsed.data;
+  const updateData: Record<string, unknown> = { ...restData };
+  if (rawPausedUntil !== undefined) {
+    updateData.pausedUntil = rawPausedUntil ?? undefined;
+  }
+
+  subscriptions[index] = { ...subscriptions[index], ...updateData } as typeof subscriptions[number];
+
+  // Clear pausedUntil when resuming
+  if (oldStatus === "paused" && newStatus === "active") {
+    delete (subscriptions[index] as Record<string, unknown>).pausedUntil;
+  }
+
+  // Determine commit message based on status transition
+  let commitMsg: string;
+  if (oldStatus === "active" && newStatus === "paused") {
+    commitMsg = pauseMessage(subscriptions[index].name);
+  } else if (oldStatus === "paused" && newStatus === "active") {
+    commitMsg = resumeMessage(subscriptions[index].name);
+  } else {
+    commitMsg = updateMessage(subscriptions[index].name);
+  }
 
   try {
     await writeSubscriptions(
       octokit,
       session.user.login,
       subscriptions,
-      updateMessage(subscriptions[index].name),
+      commitMsg,
       sha
     );
   } catch (error: unknown) {

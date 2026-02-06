@@ -19,6 +19,7 @@ export interface Translations {
     monthlySub: string;
     yearly: string;
     yearlySub: string;
+    paused: string;
   };
   subs: {
     title: string;
@@ -35,6 +36,13 @@ export interface Translations {
     editBtn: string;
     editDialogTitle: string;
     editSuccess: string;
+    statusPaused: string;
+    pauseBtn: string;
+    resumeBtn: string;
+    pauseConfirm: string;
+    pauseDialogTitle: string;
+    pausedUntil: string;
+    pausedUntilLabel: string;
   };
   form: {
     title: string;
@@ -87,6 +95,7 @@ export const translations: Record<Language, Translations> = {
       monthlySub: "Estimated Recurring",
       yearly: "Yearly Projection",
       yearlySub: "Total Annual Cost",
+      paused: "Paused",
     },
     subs: {
       title: "Subscriptions",
@@ -105,6 +114,13 @@ export const translations: Record<Language, Translations> = {
       editBtn: "Edit",
       editDialogTitle: "Edit Subscription",
       editSuccess: "Updated successfully",
+      statusPaused: "Paused",
+      pauseBtn: "Pause",
+      resumeBtn: "Resume",
+      pauseConfirm: "Pause {name}? It won't count toward your costs.",
+      pauseDialogTitle: "Pause Subscription",
+      pausedUntil: "Paused until {date}",
+      pausedUntilLabel: "Resume date (optional)",
     },
     form: {
       title: "New Subscription",
@@ -151,6 +167,7 @@ export const translations: Record<Language, Translations> = {
       monthlySub: "예상 정기 결제액",
       yearly: "연간 예상 비용",
       yearlySub: "총 연간 비용",
+      paused: "일시정지",
     },
     subs: {
       title: "구독 목록",
@@ -168,6 +185,13 @@ export const translations: Record<Language, Translations> = {
       editBtn: "수정",
       editDialogTitle: "구독 수정",
       editSuccess: "수정 완료",
+      statusPaused: "일시정지",
+      pauseBtn: "일시정지",
+      resumeBtn: "재활성화",
+      pauseConfirm: "{name}을(를) 일시정지하시겠습니까? 비용 계산에서 제외됩니다.",
+      pauseDialogTitle: "구독 일시정지",
+      pausedUntil: "{date}까지 일시정지",
+      pausedUntilLabel: "재개 날짜 (선택사항)",
     },
     form: {
       title: "새 구독 추가",
@@ -215,6 +239,7 @@ export const translations: Record<Language, Translations> = {
       monthlySub: "推定定期支払い額",
       yearly: "年間予測",
       yearlySub: "年間総コスト",
+      paused: "一時停止",
     },
     subs: {
       title: "サブスクリプション",
@@ -232,6 +257,13 @@ export const translations: Record<Language, Translations> = {
       editBtn: "編集",
       editDialogTitle: "サブスクリプション編集",
       editSuccess: "更新完了",
+      statusPaused: "一時停止中",
+      pauseBtn: "一時停止",
+      resumeBtn: "再開",
+      pauseConfirm: "{name} を一時停止しますか？コスト計算から除外されます。",
+      pauseDialogTitle: "サブスクリプション一時停止",
+      pausedUntil: "{date}まで一時停止",
+      pausedUntilLabel: "再開日（任意）",
     },
     form: {
       title: "新規サブスクリプション",
@@ -278,6 +310,7 @@ export const translations: Record<Language, Translations> = {
       monthlySub: "预计经常性支出",
       yearly: "年度预测",
       yearlySub: "年度总成本",
+      paused: "已暂停",
     },
     subs: {
       title: "订阅列表",
@@ -294,6 +327,13 @@ export const translations: Record<Language, Translations> = {
       editBtn: "编辑",
       editDialogTitle: "编辑订阅",
       editSuccess: "更新成功",
+      statusPaused: "已暂停",
+      pauseBtn: "暂停",
+      resumeBtn: "恢复",
+      pauseConfirm: "暂停 {name}？将不计入费用计算。",
+      pauseDialogTitle: "暂停订阅",
+      pausedUntil: "暂停至 {date}",
+      pausedUntilLabel: "恢复日期（可选）",
     },
     form: {
       title: "新订阅",
