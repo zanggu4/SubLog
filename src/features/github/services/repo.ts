@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/rest";
 
-const REPO_NAME = "subscription-ledger";
+const REPO_NAME = process.env.GITHUB_REPO_NAME || "subscription-log";
 
 export async function getOrCreateRepo(octokit: Octokit, owner: string) {
   try {
@@ -17,7 +17,7 @@ export async function getOrCreateRepo(octokit: Octokit, owner: string) {
         name: REPO_NAME,
         private: true,
         auto_init: true,
-        description: "Subscription ledger - managed by subscription-ledger app",
+        description: "Subscription log - managed by SubLog",
       });
       return data;
     }
