@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { GitCommit, ExternalLink, Clock } from "lucide-react";
+import { useSettings } from "@/lib/settings-context";
 
 interface CommitEntry {
   sha: string;
@@ -12,6 +12,7 @@ interface CommitEntry {
 }
 
 export function CommitHistory() {
+  const { t } = useSettings();
   const [commits, setCommits] = useState<CommitEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -26,54 +27,96 @@ export function CommitHistory() {
   }, [page]);
 
   return (
-    <Card>
-      <h3 className="font-semibold mb-4">커밋 히스토리</h3>
+    <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+        <h3 className="font-bold flex items-center gap-2">
+          <GitCommit size={20} className="text-primary" />
+          {t.history.header}
+        </h3>
+        <span className="text-xs font-mono text-muted">{t.history.file}</span>
+      </div>
+
       {loading ? (
-        <div className="space-y-2">
+        <div className="p-8 space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-10 bg-border/50 rounded animate-pulse" />
+            <div key={i} className="h-12 bg-border/50 rounded animate-pulse" />
           ))}
         </div>
       ) : commits.length === 0 ? (
-        <p className="text-sm text-muted">커밋 기록이 없습니다.</p>
+        <div className="p-8 text-center text-muted text-sm">
+          {t.history.empty}
+        </div>
       ) : (
-        <>
-          <ul className="space-y-3">
-            {commits.map((c) => (
-              <li key={c.sha} className="border-b border-border pb-3 last:border-0">
+        <div className="divide-y divide-border/50">
+          {commits.map((c) => {
+            const isFeat = c.message.startsWith("feat");
+            const isChore = c.message.startsWith("chore");
+
+            return (
+              <div
+                key={c.sha}
+                className="p-4 hover:bg-background/50 transition-colors flex items-center justify-between group"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="mt-1.5">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        isFeat
+                          ? "bg-success"
+                          : isChore
+                            ? "bg-amber"
+                            : "bg-muted"
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <p className="font-mono text-sm mb-1 group-hover:text-primary transition-colors">
+                      {c.message}
+                    </p>
+                    <div className="flex items-center gap-3 text-xs text-muted">
+                      <span className="font-mono bg-border/50 px-1.5 py-0.5 rounded">
+                        {c.sha.slice(0, 7)}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock size={10} />
+                        {c.date
+                          ? new Date(c.date).toLocaleDateString()
+                          : ""}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <a
                   href={c.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-mono hover:text-primary"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-muted hover:text-foreground"
                 >
-                  {c.message}
+                  <ExternalLink size={16} />
                 </a>
-                <p className="text-xs text-muted mt-0.5">
-                  {c.sha.slice(0, 7)} &middot;{" "}
-                  {c.date ? new Date(c.date).toLocaleDateString("ko-KR") : ""}
-                </p>
-              </li>
-            ))}
-          </ul>
-          <div className="flex gap-2 mt-4">
-            <Button
-              variant="ghost"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-            >
-              이전
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setPage((p) => p + 1)}
-              disabled={commits.length < 20}
-            >
-              다음
-            </Button>
-          </div>
-        </>
+              </div>
+            );
+          })}
+        </div>
       )}
-    </Card>
+
+      <div className="bg-background/50 px-6 py-3 border-t border-border flex justify-between text-xs text-muted">
+        <button
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+          className="disabled:opacity-30 cursor-pointer hover:text-foreground transition-colors"
+        >
+          {t.history.prev}
+        </button>
+        <button
+          onClick={() => setPage((p) => p + 1)}
+          disabled={commits.length < 20}
+          className="disabled:opacity-30 cursor-pointer hover:text-foreground transition-colors"
+        >
+          {t.history.next}
+        </button>
+      </div>
+    </div>
   );
 }

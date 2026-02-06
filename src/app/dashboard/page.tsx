@@ -6,6 +6,7 @@ import { DashboardSummary } from "@/features/subscriptions/components/dashboard-
 import { SubscriptionList } from "@/features/subscriptions/components/subscription-list";
 import { SubscriptionForm } from "@/features/subscriptions/components/subscription-form";
 import { CommitHistory } from "@/features/subscriptions/components/commit-history";
+import { DashboardTitle } from "@/features/subscriptions/components/dashboard-title";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -21,14 +22,19 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">대시보드</h2>
-        <SubscriptionForm />
-      </div>
-
       <DashboardSummary subscriptions={subscriptions} />
-      <SubscriptionList subscriptions={subscriptions} />
-      <CommitHistory />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <DashboardTitle />
+          <SubscriptionForm />
+          <SubscriptionList subscriptions={subscriptions} />
+        </div>
+
+        <div className="lg:col-span-1 space-y-6">
+          <CommitHistory />
+        </div>
+      </div>
     </div>
   );
 }

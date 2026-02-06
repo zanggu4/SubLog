@@ -2,11 +2,12 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Plus, Loader2 } from "lucide-react";
+import { useSettings } from "@/lib/settings-context";
 
 export function SubscriptionForm() {
   const router = useRouter();
+  const { t } = useSettings();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -35,12 +36,12 @@ export function SubscriptionForm() {
         throw new Error(data.error ?? "Failed to create");
       }
 
-      setToast(`${body.name} 구독 추가 완료. 커밋 생성됨.`);
+      setToast(`${body.name} — committed`);
       setTimeout(() => setToast(null), 3000);
       setOpen(false);
       router.refresh();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "오류 발생");
+      alert(err instanceof Error ? err.message : "Error");
     } finally {
       setLoading(false);
     }
@@ -48,77 +49,124 @@ export function SubscriptionForm() {
 
   if (!open) {
     return (
-      <Button onClick={() => setOpen(true)}>+ 구독 추가</Button>
+      <button
+        onClick={() => setOpen(true)}
+        className="w-full py-4 border-2 border-dashed border-border rounded-xl text-muted hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+      >
+        <div className="bg-border p-1 rounded-md group-hover:bg-primary/20 transition-colors">
+          <Plus size={20} />
+        </div>
+        <span className="font-medium">{t.form.addBtn}</span>
+      </button>
     );
   }
 
   return (
     <>
-      <Card>
-        <h3 className="font-semibold mb-4">새 구독 추가</h3>
+      <div className="bg-card rounded-xl border border-border p-6 shadow-xl">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-bold">{t.form.title}</h3>
+          <button
+            onClick={() => setOpen(false)}
+            className="text-muted hover:text-foreground text-sm cursor-pointer"
+          >
+            {t.form.cancel}
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">서비스명</label>
+            <label className="block text-sm font-medium text-muted mb-1.5">
+              {t.form.nameLabel}
+            </label>
             <input
               name="name"
               required
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background"
-              placeholder="Netflix"
+              autoFocus
+              placeholder={t.form.namePlaceholder}
+              className="w-full bg-background border border-border rounded-lg px-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
             />
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">금액 (원)</label>
+              <label className="block text-sm font-medium text-muted mb-1.5">
+                {t.form.priceLabel} (₩)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted font-mono">
+                  ₩
+                </span>
+                <input
+                  name="price"
+                  type="number"
+                  required
+                  min="1"
+                  placeholder="17000"
+                  className="w-full bg-background border border-border rounded-lg pl-8 pr-4 py-2.5 placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-muted mb-1.5">
+                {t.form.billingDayLabel}
+              </label>
               <input
-                name="price"
+                name="billing_day"
                 type="number"
                 required
                 min="1"
-                className="w-full px-3 py-2 border border-border rounded-lg bg-background"
-                placeholder="17000"
+                max="31"
+                defaultValue="1"
+                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">결제 주기</label>
-              <select
-                name="cycle"
-                required
-                className="w-full px-3 py-2 border border-border rounded-lg bg-background"
-              >
-                <option value="monthly">월간</option>
-                <option value="yearly">연간</option>
-              </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-muted mb-1.5">
+              {t.form.cycleLabel}
+            </label>
+            <div className="grid grid-cols-2 gap-2 bg-background p-1 rounded-lg border border-border">
+              <label className="has-[:checked]:bg-primary has-[:checked]:text-white has-[:checked]:shadow-lg py-2 text-sm font-medium rounded-md transition-all text-center cursor-pointer text-muted hover:text-foreground">
+                <input
+                  type="radio"
+                  name="cycle"
+                  value="monthly"
+                  defaultChecked
+                  className="sr-only"
+                />
+                {t.form.monthly}
+              </label>
+              <label className="has-[:checked]:bg-primary has-[:checked]:text-white has-[:checked]:shadow-lg py-2 text-sm font-medium rounded-md transition-all text-center cursor-pointer text-muted hover:text-foreground">
+                <input
+                  type="radio"
+                  name="cycle"
+                  value="yearly"
+                  className="sr-only"
+                />
+                {t.form.yearly}
+              </label>
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">결제일</label>
-            <input
-              name="billing_day"
-              type="number"
-              required
-              min="1"
-              max="31"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background"
-              placeholder="15"
-            />
-          </div>
-          <div className="flex gap-3">
-            <Button type="submit" disabled={loading}>
-              {loading ? "추가 중..." : "추가"}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setOpen(false)}
-            >
-              취소
-            </Button>
-          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-3 rounded-lg transition-all mt-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-50 cursor-pointer"
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={20} />
+            ) : (
+              <Plus size={20} />
+            )}
+            {t.form.submit}
+          </button>
         </form>
-      </Card>
+      </div>
 
       {toast && (
-        <div className="fixed bottom-4 right-4 bg-foreground text-background px-4 py-2 rounded-lg text-sm shadow-lg">
+        <div className="fixed bottom-4 right-4 bg-foreground text-background px-4 py-2 rounded-lg text-sm shadow-lg z-50">
           {toast}
         </div>
       )}
