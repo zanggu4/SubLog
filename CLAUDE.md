@@ -17,38 +17,66 @@ GitHub 커밋 기반 구독 가계부 웹앱. DB 없이 GitHub 레포가 저장�
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── page.tsx            # 랜딩 페이지 (Client Component)
-│   ├── dashboard/page.tsx  # 대시보드 (Server Component)
-│   ├── login/page.tsx      # 로그인
+│   ├── page.tsx            # 랜딩 페이지 (Client Component, JSON-LD 포함)
+│   ├── layout.tsx          # 루트 레이아웃 (OG metadata, SEO)
+│   ├── sitemap.ts          # 사이트맵 (/, /login)
+│   ├── robots.ts           # robots.txt (/dashboard, /api/ 차단)
+│   ├── dashboard/
+│   │   ├── layout.tsx      # 대시보드 레이아웃 (robots noindex)
+│   │   └── page.tsx        # 대시보드 (Server Component)
+│   ├── (auth)/login/page.tsx # 로그인
 │   └── api/
 │       ├── auth/[...nextauth]/route.ts
 │       ├── subscriptions/route.ts      # GET, POST
-│       ├── subscriptions/[id]/route.ts # PUT, DELETE
+│       ├── subscriptions/[id]/route.ts # PUT (상태전환 포함), DELETE
 │       ├── commits/route.ts            # 커밋 히스토리
 │       └── exchange-rates/route.ts     # 환율 API
 ├── lib/
 │   ├── auth.ts             # Auth.js 설정 (scope: repo read:user user:email)
 │   ├── octokit.ts          # Octokit 팩토리
-│   ├── i18n.ts             # 다국어 (en, ko, ja, zh)
+│   ├── i18n.ts             # 다국어 (en, ko, ja, zh) - calendar, categories 포함
 │   ├── currency.ts         # 통화 설정 (KRW, USD, JPY, EUR)
 │   └── settings-context.tsx # 테마, 언어, 통화 Context
 ├── features/
 │   ├── github/services/    # repo.ts, content.ts, commits.ts
 │   ├── subscriptions/
-│   │   ├── types/          # Zod 스키마
-│   │   ├── services/       # ID 생성, 커밋 메시지 빌더
-│   │   └── components/     # form, card, list, summary, history
-│   └── auth/components/    # header.tsx
-└── components/ui/          # button, card, dialog
+│   │   ├── types/          # Zod 스키마 (CATEGORIES, CATEGORY_CONFIG 포함)
+│   │   ├── data/           # known-services.ts (서비스 자동완성 데이터)
+│   │   ├── services/       # ID 생성, 커밋 메시지 빌더 (pause/resume 포함)
+│   │   └── components/     # form, card, list, summary, history,
+│   │                       # edit-dialog, autocomplete, category-breakdown,
+│   │                       # payment-calendar, dashboard-content
+│   └── auth/components/    # header.tsx, footer.tsx
+└── components/ui/          # button, card, dialog (hideFooter 옵션)
 ```
 
 ## 핵심 패턴
 
 - 구독 데이터 → GitHub 레포의 `subscriptions.json`에 저장
-- 모든 변경 = GitHub 커밋 (feat: add, chore: update, chore: cancel)
+- 모든 변경 = GitHub 커밋 (feat: add, chore: update/cancel/pause/resume)
 - SHA 기반 낙관적 동시성 제어 (409 Conflict 처리)
 - 개별 구독마다 통화 설정 + 글로벌 표시 통화로 환율 변환
 - Next.js 15: dynamic route params는 Promise (`await params`)
+- 구독 상태: active → paused → active (PUT), cancelled (DELETE만)
+- 카테고리: 8종 (entertainment, development, cloud, productivity, music, shopping, news, other)
+- 결제 캘린더: monthly는 매월 billing_day, yearly는 billing_month의 billing_day에만 표시
+
+## 스키마 (Subscription)
+
+```typescript
+{
+  id: string,
+  name: string,
+  price: number,
+  currency: "KRW" | "USD" | "JPY" | "EUR",
+  cycle: "monthly" | "yearly",
+  billing_day: 1~31,
+  status: "active" | "paused" | "cancelled",
+  pausedUntil?: string (ISO datetime),
+  category?: Category,
+  billing_month?: 1~12 (yearly만)
+}
+```
 
 ## 환경변수
 
