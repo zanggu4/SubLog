@@ -63,6 +63,7 @@ export function SubscriptionForm() {
 
       showToast(`${body.name} — committed`);
       setOpen(false);
+      setCycle("monthly");
       router.refresh();
       window.dispatchEvent(new Event("subscriptions-updated"));
     } catch (err) {
@@ -92,7 +93,7 @@ export function SubscriptionForm() {
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-bold">{t.form.title}</h3>
           <button
-            onClick={() => setOpen(false)}
+            onClick={() => { setOpen(false); setCycle("monthly"); }}
             className="text-muted hover:text-foreground text-sm cursor-pointer"
           >
             {t.form.cancel}
